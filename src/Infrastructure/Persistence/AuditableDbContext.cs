@@ -16,7 +16,7 @@ public abstract class AuditableDbContext : DbContext
 
             if (entry.State != EntityState.Added) continue;
 
-            entry.Entity.CreatedAt = DateTime.Now;
+            entry.Entity.CreatedAt = DateTime.UtcNow;
         }
 
         var result = await base.SaveChangesAsync();

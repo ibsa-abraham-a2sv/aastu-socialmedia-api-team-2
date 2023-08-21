@@ -2,4 +2,4 @@
 
 namespace Application.Features.Follows.Requests.Queries;
 
-public abstract record GetFollowingRequest(Guid Id) : IRequest<List<Domain.Follows.Follows>>;
+public record GetFollowingRequest(Guid Id) : IRequest<List<Domain.Follows.Follows>>;

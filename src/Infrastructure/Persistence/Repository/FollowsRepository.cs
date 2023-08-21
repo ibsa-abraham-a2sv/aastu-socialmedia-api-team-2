@@ -8,7 +8,7 @@ namespace Persistence.Repository;
 public class FollowsRepository : GenericRepository<Follows>, IFollowsRepository
 {
     private readonly SocialSyncDbContext _dbContext;
-    protected FollowsRepository(SocialSyncDbContext dbContext) : base(dbContext)
+    public FollowsRepository(SocialSyncDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
     }
@@ -16,7 +16,7 @@ public class FollowsRepository : GenericRepository<Follows>, IFollowsRepository
     public async Task<bool> CheckIfUserFollows(Guid userId, Guid followsId)
     {
         return await _dbContext.Follows.Where(user => 
-                user.UserId == userId && user.FollowsId == followsId).FirstOrDefaultAsync() == null;
+                user.UserId == userId && user.FollowsId == followsId).FirstOrDefaultAsync() != null;
     }
 
     public async Task<Guid?> Follow(Guid userId, Guid followsId)
@@ -25,7 +25,7 @@ public class FollowsRepository : GenericRepository<Follows>, IFollowsRepository
 
         if (isExists) return null;
         
-        var result = await _dbContext.Follows.AddAsync(new Follows());
+        var result = await _dbContext.Follows.AddAsync(new Follows(){FollowsId = followsId, UserId = userId});
 
         await _dbContext.SaveChangesAsync();
 
@@ -48,7 +48,6 @@ public class FollowsRepository : GenericRepository<Follows>, IFollowsRepository
     {
         var results = await _dbContext.Follows.Where(user => user.FollowsId == userId).ToListAsync();
 
-        // need to filter the follows to only their id. there should be a dto here.
         return results;
     }
 
@@ -56,7 +55,6 @@ public class FollowsRepository : GenericRepository<Follows>, IFollowsRepository
     {
         var results = await _dbContext.Follows.Where(user => user.UserId == userId).ToListAsync();
 
-        // need to filter the follows to only their id. there should be a dto here.
         return results;
     }
 }
