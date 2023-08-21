@@ -3,12 +3,14 @@ using Application.Features.Follows.Requests.Queries;
 using Application.Responses;
 using Domain.Follows;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
 [Route("api/[controller]/{id:guid}")]
 [ApiController]
+[Authorize]
 public class FollowsController : ControllerBase
 {
     private readonly IMediator _mediator;
