@@ -1,6 +1,6 @@
-using SocialSync.Core.Domain.Common.Models;
+using Domain.Common.Models;
 
-namespace SocialSync.Core.Domain.Follows;
+namespace Domain.Follows;
 
 public sealed class Follows : EntityBase {
     public Guid UserId { get; private set; }

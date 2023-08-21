@@ -1,6 +1,6 @@
 using AutoMapper;
 
-namespace SocialSync.Core.Application.Profiles;
+namespace Application.Profiles;
 
 public class MappingProfile : Profile {
 

@@ -1,5 +1,6 @@
-namespace SocialSync.Core.Application.Contracts.Persistence;
+namespace Application.Contracts.Persistence;
 
-public interface IUnitOfWork {
+public interface IUnitOfWork : IDisposable {
+    IFollowsRepository FollowsRepository { get; set; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

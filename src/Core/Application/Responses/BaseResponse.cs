@@ -1,8 +1,8 @@
-namespace SocialSync.Core.Application.Responses;
+namespace Application.Responses;
 
 public class BaseCommandResponse {
-    public int Id { get; private set; }
-    public bool Success { get; private set; }
-    public string? Message { get; private set; }
-    public List<string>? Errors { get; private set; }
+    public Guid Id { get; set; }
+    public bool Success { get; set; }
+    public string? Message { get; set; }
+    public List<string>? Errors { get; set; }
 }

@@ -1,5 +1,5 @@
 using MediatR;
 
-namespace SocialSync.Core.Application.Features.Follows.Requests.Commands;
+namespace Application.Features.Follows.Requests.Commands;
 
-public sealed record RemoveFollowingRequest(Guid UserId, Guid FollowsId) : IRequest<Unit>;
+public abstract record RemoveFollowingRequest(Guid UserId, Guid FollowsId) : IRequest<Unit>;

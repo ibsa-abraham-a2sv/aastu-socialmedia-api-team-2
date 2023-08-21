@@ -1,4 +1,4 @@
-namespace SocialSync.Core.Domain.Common.Models;
+namespace Domain.Common.Models;
 
 public abstract class EntityBase {
     protected EntityBase(Guid id) => Id = id;

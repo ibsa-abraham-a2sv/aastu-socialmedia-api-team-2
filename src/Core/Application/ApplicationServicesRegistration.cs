@@ -1,8 +1,8 @@
-using Microsoft.Extensions.DependencyInjection;
-using MediatR;
 using System.Reflection;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace SocialSync.Core.Application;
+namespace Application;
 
 public static class ApplicationServiceRegistration {
     public static IServiceCollection ConfigureApplicationServices(this IServiceCollection services) {

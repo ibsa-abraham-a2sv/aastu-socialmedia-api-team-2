@@ -1,25 +1,21 @@
+using Application.Contracts.Persistence;
+using Application.Features.Follows.Requests.Commands;
+using Application.Responses;
 using MediatR;
-using SocialSync.Core.Application.Features.Follows.Requests.Commands;
-using SocialSync.Core.Application.Responses;
-using SocialSync.Core.Application.Contracts.Persistence;
 
-namespace SocialSync.Core.Application.Features.Follows.Handlers.Commands;
+namespace Application.Features.Follows.Handlers.Commands;
 
 internal sealed class CreateFollowingRequestHandler : IRequestHandler<CreateFollowingRequest, BaseCommandResponse> {
-    readonly IFollowsRepository _followsRepository;
-    readonly IUnitOfWork _unitOfWork;
-
-    public CreateFollowingRequestHandler(IFollowsRepository followsRepository, IUnitOfWork unitOfWork) {
-        _followsRepository = followsRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    public CreateFollowingRequestHandler(IUnitOfWork unitOfWork) {
         _unitOfWork = unitOfWork;
     }
 
     public async Task<BaseCommandResponse> Handle(CreateFollowingRequest request, CancellationToken cancellationToken) {
-        await _followsRepository.Follow(request.UserId, request.FollowsId);
+        var response = await _unitOfWork.FollowsRepository.Follow(request.UserId, request.FollowsId);
         
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        // have to return with the values
-        return new BaseCommandResponse(){}; 
+        return new BaseCommandResponse(){Id = response, Success = true, Message = "Successfully added the follow request"}; 
     }
 }
