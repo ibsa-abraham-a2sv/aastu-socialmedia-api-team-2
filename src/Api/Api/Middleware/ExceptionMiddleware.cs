@@ -30,7 +30,7 @@ namespace Api.Middleware
             string result = JsonConvert.SerializeObject(new ErrorDetails 
                 { 
                     ErrorMessage = exception.Message, 
-                    ErrorType = "Failure" 
+                    ErrorType = "Failure" ,
                 });
 
             switch (exception)

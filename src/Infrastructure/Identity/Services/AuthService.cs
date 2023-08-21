@@ -80,7 +80,6 @@ namespace Identity.Services
                 EmailConfirmed = true
             };
             
-            Console.WriteLine(user.ToString());
             var result = await _userManager.CreateAsync(user, request.Password);
             
 
@@ -90,12 +89,8 @@ namespace Identity.Services
             }
             else
             {
-                foreach (var error in result.Errors) 
-                {
-                    Console.WriteLine(error.Description);
-                }
-
-                return null;
+                var errors = result.Errors.Select(er => er.Description).ToArray();
+                throw new Exception($"{string.Join(Environment.NewLine, errors)}");
             }
             
         }
