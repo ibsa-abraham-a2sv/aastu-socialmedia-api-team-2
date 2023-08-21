@@ -4,14 +4,14 @@ using MediatR;
 
 namespace Application.Features.Follows.Handlers.Queries;
 
-public class GetFollowingRequestHandler : IRequestHandler<GetFollowingRequest, List<Guid>>
+public class GetFollowingRequestHandler : IRequestHandler<GetFollowingRequest, List<Domain.Follows.Follows>>
 {
     private readonly IFollowsRepository _followsRepository;
         
     public GetFollowingRequestHandler(IFollowsRepository followsRepository) {
         _followsRepository = followsRepository;
     }
-    public async Task<List<Guid>> Handle(GetFollowingRequest request, CancellationToken cancellationToken)
+    public async Task<List<Domain.Follows.Follows>> Handle(GetFollowingRequest request, CancellationToken cancellationToken)
     {
         var results = await _followsRepository.GetFollowing(request.Id);
 
