@@ -1,7 +1,7 @@
 ﻿using Application.DTOs.User;
-using SocialAsync.Application.Models.Identity;
+using Application.Models.Identity;
 
-namespace SocialAsync.Application.Contracts.Identity;
+namespace Application.Contracts.Identity;
 
 public interface IUserService
 {

@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SocialAsync.Application.Contracts.Identity;
-using SocialAsync.Application.Models.Identity;
+﻿using Application.Contracts.Identity;
+using Application.Models.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 

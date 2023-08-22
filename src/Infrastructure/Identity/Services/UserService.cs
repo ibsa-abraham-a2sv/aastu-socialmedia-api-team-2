@@ -1,10 +1,10 @@
-﻿using Application.DTOs.User;
+﻿using Application.Contracts.Identity;
+using Application.DTOs.User;
 using Application.Exceptions;
+using Application.Models.Identity;
 using Identity.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using SocialAsync.Application.Contracts.Identity;
-using SocialAsync.Application.Models.Identity;
 
 namespace Identity.Services;
 
@@ -40,7 +40,7 @@ public class UserService : IUserService
     public Task UpdateUser(UpdateUserDto user)
     {
         // find the user in the identity database
-        var userToUpdate = _userManager.FindByIdAsync(user.Id);
+        var userToUpdate = _userManager.FindByIdAsync(user.Id.ToString());
         
         if (user == null)
             throw new NotFoundException("User", user!.Id);

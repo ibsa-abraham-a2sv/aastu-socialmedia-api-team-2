@@ -1,12 +1,12 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Application.Contracts.Identity;
+using Application.Models.Identity;
 using Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using SocialAsync.Application.Contracts.Identity;
-using SocialAsync.Application.Models.Identity;
 
 namespace Identity.Services
 {

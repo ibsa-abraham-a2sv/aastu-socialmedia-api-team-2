@@ -1,4 +1,6 @@
 ﻿using System.Text;
+using Application.Contracts.Identity;
+using Application.Models.Identity;
 using Identity.Models;
 using Identity.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -7,8 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using SocialAsync.Application.Contracts.Identity;
-using SocialAsync.Application.Models.Identity;
 
 namespace Identity
 {
