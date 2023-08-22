@@ -6,10 +6,11 @@ public class UnitOfWork : IUnitOfWork
 {
     private readonly SocialSyncDbContext _dbContext;
 
-    public UnitOfWork(SocialSyncDbContext dbContext, IFollowsRepository followsRepository)
+    public UnitOfWork(SocialSyncDbContext dbContext, IFollowsRepository followsRepository, IPostRepository postRepository)
     {
         _dbContext = dbContext;
         FollowsRepository = followsRepository;
+        PostRepository = postRepository;
     }
     
     public void Dispose()
@@ -19,6 +20,8 @@ public class UnitOfWork : IUnitOfWork
     }
 
     public IFollowsRepository FollowsRepository { get; }
+    public IPostRepository PostRepository { get; }
+
 
     public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
