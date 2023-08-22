@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.VisualBasic;
 
 namespace Application.Models.Identity
 {
@@ -17,9 +18,15 @@ namespace Application.Models.Identity
         [Required]
         [MinLength(6)]
         public string UserName { get; set; } = string.Empty;
-
+        
+        [Required]
+        public DateTime BirthDate { get; set; }
+        
         [Required]
         [MinLength(6)]
+        [Compare("PasswordComfirmation", ErrorMessage = "Password Does not Match.")]
         public string Password { get; set; } = string.Empty;
+        
+        public string PasswordComfirmation { get; set; } = string.Empty;
     }
 }

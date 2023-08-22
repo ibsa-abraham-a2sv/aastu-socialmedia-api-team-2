@@ -12,4 +12,6 @@ public interface IUserService
     // delete the user
     public Task DeleteUser(string id);
     
+    public Task UploadProfilePicture(string userId, byte[] picture);
+    public Task<byte[]> GetProfilePicture(string userId);
 }

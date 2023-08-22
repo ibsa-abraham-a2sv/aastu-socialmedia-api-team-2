@@ -78,6 +78,8 @@ namespace Identity.Services
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 UserName = request.UserName,
+                BirthDate = request.BirthDate,
+                PasswordComfirmation = request.PasswordComfirmation,
                 EmailConfirmed = true
             };
             

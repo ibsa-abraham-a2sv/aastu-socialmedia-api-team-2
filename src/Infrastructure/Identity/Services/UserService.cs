@@ -21,6 +21,8 @@ public class UserService : IUserService
     {
         // get the user using the manager 
         var user = await _userManager.FindByIdAsync(userId);
+        
+        
         if (user != null)
             return new User()
             {
@@ -37,7 +39,7 @@ public class UserService : IUserService
         throw new NotFoundException("User", userId);
     }
 
-    public Task UpdateUser(UpdateUserDto user)
+    public async Task UpdateUser(UpdateUserDto user)
     {
         // find the user in the identity database
         var userToUpdate = _userManager.FindByIdAsync(user.Id.ToString());
@@ -54,30 +56,63 @@ public class UserService : IUserService
         userToUpdate.Result.UserName = user.UserName;
         
         // update the user
-        var result = _userManager.UpdateAsync(userToUpdate.Result);
+        var result = await _userManager.UpdateAsync(userToUpdate.Result);
 
-        if (!result.IsCompletedSuccessfully)
+        if (!result.Succeeded)
         {
-            var error = result.Exception?.InnerException?.Message ?? "Error updating user";
-            throw new BadRequestException(error);
-        }
+            var errors = result.Errors.Select(er => er.Description).ToArray();
             
-        // return a Unit rapped in task
-        return Task.FromResult(Unit.Value);
+            throw new BadRequestException(string.Join(Environment.NewLine, errors));
+        }
     }
 
-    public Task DeleteUser(string id)
+    public async Task DeleteUser(string id)
     {
         // get the user
-        var user = _userManager.FindByIdAsync(id);
+        var user =await  _userManager.FindByIdAsync(id);
         
         if (user == null)
             throw new NotFoundException("User", id);
         
         // delete the user
-        var result = _userManager.DeleteAsync(user.Result!);
-
-        return Task.FromResult(Unit.Value);
+        var result = await  _userManager.DeleteAsync(user);
     }
-    
+
+    public async Task UploadProfilePicture(string userId, byte[] picture)
+    {
+        // get the user
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user == null)    
+        {
+            throw new NotFoundException("User", userId);
+        }
+        
+        // update the user
+        user.ProfilePicture = picture;
+        var result = await _userManager.UpdateAsync(user);
+        
+        if (!result.Succeeded)
+        {
+            var errors = result.Errors.Select(er => er.Description).ToArray();
+            
+            throw new BadRequestException(string.Join(Environment.NewLine, errors));
+        }
+        
+    }
+
+    public async Task<byte[]> GetProfilePicture(string userId)
+    {
+        // get the user
+        var user = await _userManager.FindByIdAsync(userId);
+        
+        if (user == null)
+            throw new NotFoundException("User", userId);
+        
+        if (user.ProfilePicture == null)
+            throw new NotFoundException("Profile Picture", userId);
+        
+        // get the profile picture
+        return user.ProfilePicture;
+    }
 }
