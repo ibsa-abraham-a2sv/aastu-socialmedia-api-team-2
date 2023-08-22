@@ -28,7 +28,8 @@ namespace Identity.Services
         public async Task<AuthResponse> Login(AuthRequest request)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
-
+            
+      
             if (user == null)
             {
                 throw new Exception($"User with {request.Email} not found.");

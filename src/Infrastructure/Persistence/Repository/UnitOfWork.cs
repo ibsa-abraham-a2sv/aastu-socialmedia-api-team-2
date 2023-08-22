@@ -1,15 +1,16 @@
 ﻿using Application.Contracts.Persistence;
+using Domain.Follows;
 
 namespace Persistence.Repository;
 
 public class UnitOfWork : IUnitOfWork
 {
     private readonly SocialSyncDbContext _dbContext;
+    private FollowsRepository? _followsRepository;
 
-    public UnitOfWork(SocialSyncDbContext dbContext, IFollowsRepository followsRepository)
+    public UnitOfWork(SocialSyncDbContext dbContext)
     {
         _dbContext = dbContext;
-        FollowsRepository = followsRepository;
     }
     
     public void Dispose()
@@ -18,7 +19,8 @@ public class UnitOfWork : IUnitOfWork
         GC.SuppressFinalize(this);
     }
 
-    public IFollowsRepository FollowsRepository { get; }
+    public IFollowsRepository FollowsRepository => 
+        _followsRepository ??= new FollowsRepository(_dbContext);
 
     public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
