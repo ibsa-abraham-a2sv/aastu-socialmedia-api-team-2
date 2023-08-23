@@ -31,7 +31,6 @@
 
 
     <ItemGroup>
-      <Folder Include="Follows\Commands\" />
       <Folder Include="Likes\Commands\" />
       <Folder Include="Likes\Queries\" />
       <Folder Include="Unlikes\Commands\" />
