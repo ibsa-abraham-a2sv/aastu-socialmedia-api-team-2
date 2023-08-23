@@ -60,7 +60,7 @@ public class FollowsController : ControllerBase
         return Ok(following);
     }
     
-    [HttpGet("check/{id:guid}/{followsId:guid}")]
+    [HttpGet("check/{followsId:guid}")]
     public async Task<ActionResult<bool>> CheckUserFollows(Guid id, Guid followsId)
     {
         return Ok(await _mediator.Send(new CheckIfUserFollowsRequest(id, followsId)));
