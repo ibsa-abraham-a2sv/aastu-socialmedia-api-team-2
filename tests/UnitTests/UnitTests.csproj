@@ -30,9 +30,5 @@
     </ItemGroup>
 
 
-    <ItemGroup>
-      <Folder Include="Unlikes\Commands\" />
-      <Folder Include="Unlikes\Queries\" />
-    </ItemGroup>
 
 </Project>

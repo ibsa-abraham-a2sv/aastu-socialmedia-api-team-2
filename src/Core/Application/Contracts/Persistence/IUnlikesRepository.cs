@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿using Domain.Unlikes;
+using MediatR;
 
 namespace Application.Contracts.Persistence;
 
-public interface IUnlikesRepository
+public interface IUnlikesRepository : IGenericRepository<Unlikes>
 {
     Task<bool> CheckIfUserUnlikes(Guid userId, Guid unlikesId);
     Task<Guid?> CreateUnlike(Guid userId, Guid unlikesId);

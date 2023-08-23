@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repository;
 
-public class UnlikesRepository : GenericRepository<Likes>, IUnlikesRepository
+public class UnlikesRepository : GenericRepository<Unlikes>, IUnlikesRepository
 {
     private readonly SocialSyncDbContext _dbContext;
     public UnlikesRepository(SocialSyncDbContext dbContext) : base(dbContext)

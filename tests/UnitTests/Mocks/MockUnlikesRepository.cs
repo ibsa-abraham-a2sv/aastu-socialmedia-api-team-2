@@ -1,5 +1,4 @@
 ﻿using Application.Contracts.Persistence;
-using Domain.Unlikes;
 using MediatR;
 using Moq;
 
@@ -27,28 +26,28 @@ public static class MockUnlikesRepository
                 new Tuple<string, Guid>("Post5", Guid.NewGuid())
             };
                 
-            var unlikesList = new List<Unlikes>
+            var unlikesList = new List<Domain.Unlikes.Unlikes>
             {
-                new Unlikes()
+                new Domain.Unlikes.Unlikes()
                 {
                     UserId = users[0].Item2,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow,
                     UnlikesId = posts[1].Item2
                 },
-                new Unlikes()
+                new Domain.Unlikes.Unlikes()
                 {
                     UserId = users[1].Item2,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow,
                     UnlikesId = posts[2].Item2
                 },
-                new Unlikes()
+                new Domain.Unlikes.Unlikes()
                 {
                     UserId = users[2].Item2,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow,
-                    UnlikesId = posts[0].Item2
+                    UnlikesId = posts[1].Item2
                 },
             };
         
@@ -56,11 +55,13 @@ public static class MockUnlikesRepository
         
             mockRepo.Setup(r => r.CreateUnlike(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync((Guid userId, Guid unlikesId) =>
             {
-                var unlike = new Unlikes()
+                var unlike = new Domain.Unlikes.Unlikes()
                     { UnlikesId = unlikesId, UserId = userId, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow };
                 unlikesList.Add(unlike);
                 return unlike.Id;
             });
+
+            mockRepo.Setup(r => r.GetAll()).ReturnsAsync(unlikesList);
                 
             mockRepo.Setup(r => r.RemoveUnlike(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync((Guid userId, Guid unlikesId) =>
             {
