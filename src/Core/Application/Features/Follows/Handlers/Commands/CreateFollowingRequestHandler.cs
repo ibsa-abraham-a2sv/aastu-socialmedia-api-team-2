@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Application.Features.Follows.Handlers.Commands;
 
-internal sealed class CreateFollowingRequestHandler : IRequestHandler<CreateFollowingRequest, BaseCommandResponse> {
+public class CreateFollowingRequestHandler : IRequestHandler<CreateFollowingRequest, BaseCommandResponse> {
     private readonly IUnitOfWork _unitOfWork;
     public CreateFollowingRequestHandler(IUnitOfWork unitOfWork) {
         _unitOfWork = unitOfWork;

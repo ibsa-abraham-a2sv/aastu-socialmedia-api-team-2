@@ -1,4 +1,5 @@
-﻿using Application.Features.Follows.Requests.Commands;
+﻿using Application.DTOs.Follows;
+using Application.Features.Follows.Requests.Commands;
 using Application.Features.Follows.Requests.Queries;
 using Application.Responses;
 using Domain.Follows;
@@ -10,7 +11,7 @@ namespace Api.Controllers;
 
 [Route("api/[controller]/{id:guid}")]
 [ApiController]
-[Authorize]
+//[Authorize]
 public class FollowsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -31,17 +32,31 @@ public class FollowsController : ControllerBase
         return Ok(following);
     }
 
-    [HttpPost("{followsId:guid}")]
-    public async Task<ActionResult<BaseCommandResponse>> CreateFollowing(Guid id, Guid followsId)
+    [HttpPost]
+    public async Task<ActionResult<BaseCommandResponse>> CreateFollowing(Guid id, [FromBody] FollowsDto follows)
     {
-        var response = await _mediator.Send(new CreateFollowingRequest(id, followsId));
+        var response = await _mediator.Send(new CreateFollowingRequest(id, follows.FollowsId));
         return Ok(response);
     }
 
-    [HttpDelete("{followsId:guid}")]
-    public async Task<ActionResult<Unit>> RemoveFollowing(Guid id, Guid followsId)
+    [HttpDelete]
+    public async Task<ActionResult<Unit>> RemoveFollowing(Guid id, [FromBody] FollowsDto follows)
     {
-        var response = await _mediator.Send(new RemoveFollowingRequest(id, followsId));
+        var response = await _mediator.Send(new RemoveFollowingRequest(id, follows.FollowsId));
         return NoContent();
+    }
+    
+    [HttpGet("following/count")]
+    public async Task<ActionResult<List<Follows>>> GetFollowingCount(Guid id)
+    {
+        var following = await _mediator.Send(new GetFollowingCountRequest(id));
+        return Ok(following);
+    }
+    
+    [HttpGet("followers/count")]
+    public async Task<ActionResult<List<Follows>>> GetFollowersCount(Guid id)
+    {
+        var following = await _mediator.Send(new GetFollowersCountRequest(id));
+        return Ok(following);
     }
 }
