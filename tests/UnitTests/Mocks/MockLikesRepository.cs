@@ -1,6 +1,4 @@
 ﻿using Application.Contracts.Persistence;
-using Domain.Follows;
-using Domain.Likes;
 using MediatR;
 using Moq;
 
@@ -28,25 +26,25 @@ public static class MockLikesRepository
             new Tuple<string, Guid>("Post5", Guid.NewGuid())
         };
             
-        var likesList = new List<Likes>
+        var likesList = new List<Domain.Likes.Likes>
         {
-            new Likes()
+            new Domain.Likes.Likes()
             {
                 UserId = users[0].Item2,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
                 LikesId = posts[1].Item2
             },
-            new Likes()
+            new Domain.Likes.Likes()
             {
                 UserId = users[1].Item2,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
                 LikesId = posts[2].Item2
             },
-            new Likes()
+            new Domain.Likes.Likes()
             {
-                UserId = users[2].Item2,
+                UserId = users[0].Item2,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
                 LikesId = posts[0].Item2
@@ -57,11 +55,13 @@ public static class MockLikesRepository
     
         mockRepo.Setup(r => r.CreateLike(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync((Guid userId, Guid likesId) =>
         {
-            var like = new Likes()
+            var like = new Domain.Likes.Likes()
                 { LikesId = likesId, UserId = userId, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow };
             likesList.Add(like);
             return like.Id;
         });
+
+        mockRepo.Setup(r => r.GetAll()).ReturnsAsync(likesList);
             
         mockRepo.Setup(r => r.RemoveLike(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync((Guid userId, Guid likesId) =>
         {
@@ -81,7 +81,7 @@ public static class MockLikesRepository
                             
             return response;
         });
-            
+        
         mockRepo.Setup(r => r.GetLikedContentList(It.IsAny<Guid>())).ReturnsAsync((Guid userId) =>
         {
             var response = likesList.Where(l => l.UserId == userId).ToList();
