@@ -19,9 +19,11 @@ public class ProfileManager : ControllerBase
 
     // get user by id
     [HttpGet("api/[controller]/[action]")]
+    // [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    // [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<User>> GetUserById(string id)
     {
-        return await _userService.GetUserById(id);
+        return Ok(await _userService.GetUserById(id));
     }
     
     // update user
@@ -60,7 +62,7 @@ public class ProfileManager : ControllerBase
     public async Task<ActionResult> GetProfilePicture(string userId)
     {
         var picture = await _userService.GetProfilePicture(userId);
-        return File(picture, "image/jpeg");
+        return Ok(File(picture, "image/jpeg"));
     }
     
     

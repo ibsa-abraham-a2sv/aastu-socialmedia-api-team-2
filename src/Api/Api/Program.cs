@@ -4,12 +4,14 @@ using Identity;
 using Microsoft.OpenApi.Models;
 using Persistence;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.ConfigureApplicationServices();
 builder.Services.ConfigurePersistenceServices(builder.Configuration);
 builder.Services.ConfigureIdentityServices(builder.Configuration);
+builder.Services.AddHttpContextAccessor();
 
 //add swagger documentation
 AddSwaggerDoc(builder.Services);
