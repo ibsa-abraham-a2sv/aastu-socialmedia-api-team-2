@@ -6,9 +6,9 @@ namespace Persistence.Repository;
 public class UnitOfWork : IUnitOfWork
 {
     private readonly SocialSyncDbContext _dbContext;
-    private IFollowsRepository? _followsRepository;
-    private ILikesRepository? _likesRepository;
-    private IUnlikesRepository? _unlikesRepository;
+    private FollowsRepository? _followsRepository;
+    private LikesRepository? _likesRepository;
+    private UnlikesRepository? _unlikesRepository;
 
     public UnitOfWork(SocialSyncDbContext dbContext)
     {
