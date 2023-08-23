@@ -11,4 +11,7 @@ public interface IFollowsRepository : IGenericRepository<Follows>
 
     Task<List<Follows>> GetFollowers(Guid userId);
     Task<List<Follows>> GetFollowing(Guid userId);
+
+    Task<int> GetFollowingCount(Guid userId);
+    Task<int> GetFollowersCount(Guid userId);
 }

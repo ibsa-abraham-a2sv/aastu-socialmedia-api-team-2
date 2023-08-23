@@ -8,7 +8,7 @@ public class GetFollowersRequestHandler : IRequestHandler<GetFollowersRequest, L
 {
     private readonly IUnitOfWork _unitOfWork;
     
-    public GetFollowersRequestHandler(IFollowsRepository followsRepository, IUnitOfWork unitOfWork) {
+    public GetFollowersRequestHandler(IUnitOfWork unitOfWork) {
         _unitOfWork = unitOfWork;
     }
     public async Task<List<Domain.Follows.Follows>> Handle(GetFollowersRequest request, CancellationToken cancellationToken)
