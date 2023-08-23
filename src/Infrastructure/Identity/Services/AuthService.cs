@@ -1,12 +1,12 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Application.Contracts.Identity;
+using Application.Models.Identity;
 using Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using SocialAsync.Application.Contracts.Identity;
-using SocialAsync.Application.Models.Identity;
 
 namespace Identity.Services
 {
@@ -28,7 +28,8 @@ namespace Identity.Services
         public async Task<AuthResponse> Login(AuthRequest request)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
-
+            
+      
             if (user == null)
             {
                 throw new Exception($"User with {request.Email} not found.");
@@ -77,6 +78,8 @@ namespace Identity.Services
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 UserName = request.UserName,
+                BirthDate = request.BirthDate,
+                PasswordComfirmation = request.PasswordComfirmation,
                 EmailConfirmed = true
             };
             

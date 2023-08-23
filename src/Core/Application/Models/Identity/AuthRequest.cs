@@ -1,8 +1,8 @@
-﻿namespace SocialAsync.Application.Models.Identity
+﻿namespace Application.Models.Identity
 {
     public class AuthRequest
     {
-        public string Email { get; set; }
-        public string Password { get; set; }
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
     }
 }
