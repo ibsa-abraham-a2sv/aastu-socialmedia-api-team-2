@@ -8,7 +8,7 @@ public class GetFollowersCountRequestHandler : IRequestHandler<GetFollowersCount
 {
     private readonly IUnitOfWork _unitOfWork;
         
-    public GetFollowersCountRequestHandler(IFollowsRepository followsRepository, IUnitOfWork unitOfWork) {
+    public GetFollowersCountRequestHandler(IUnitOfWork unitOfWork) {
         _unitOfWork = unitOfWork;
     }
     

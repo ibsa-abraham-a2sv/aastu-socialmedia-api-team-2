@@ -27,7 +27,7 @@ public class GetFollowersRequestHandlerTest
     }
 
     [Fact]  
-    public async Task GetLeaveTypeListTest()
+    public async Task GetFollowersTest()
     {
         var handler = new GetFollowersRequestHandler(_mockRepo.Object);
 
