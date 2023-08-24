@@ -51,6 +51,13 @@ public static class MockFollowsRepository
             followsList.Add(follow);
             return follow.Id;
         });
+
+        mockRepo.Setup(r => r.CheckIfUserFollows(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(
+            (Guid userId, Guid followsId) =>
+            {
+                return followsList.Find(f => f.FollowsId == followsId && f.UserId == userId) != null;
+
+            });
         
         mockRepo.Setup(r => r.Unfollow(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync((Guid userId, Guid followsId) =>
         {
