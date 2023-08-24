@@ -14,8 +14,8 @@ public class FollowsDtoValidator : AbstractValidator<FollowsDto>
         RuleFor(p => p.FollowsId)
             .MustAsync(async (id, token) =>
             {
-                var leaveTypeExists = await _followsRepository.Exists(id);
-                return leaveTypeExists;
+                var followUserExists = await _followsRepository.Exists(id);
+                return true;
             })
             .WithMessage("{PropertyName} does not exist.");
     }
