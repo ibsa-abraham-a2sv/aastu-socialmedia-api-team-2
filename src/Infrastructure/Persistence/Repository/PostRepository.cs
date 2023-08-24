@@ -74,21 +74,21 @@ public class PostRepository : GenericRepository<Post>, IPostRepository
         }
     }
 
-    public async Task<List<Post>> GetPostsByUserId(Guid userId, int pageIndex, int pageSize)
+    public async Task<List<Post>> GetPostsByUserId(Guid userId, int pageIndex = 1, int pageSize = 10)
     {
         var results = await _dbContext.Posts.Where(post => post.UserId == userId).OrderByDescending(p => p.CreatedAt)
         .Skip((pageIndex - 1) * pageSize)
         .Take(pageSize).ToListAsync();
         return results;
     }
-    public async Task<List<Post>> GetFollowingPosts(Guid userId, int pageIndex, int pageSize)
+    public async Task<List<Post>> GetFollowingPosts(Guid userId)
     {
         var following = await _dbContext.Follows.Where(follow => follow.UserId == userId).ToListAsync();
         var posts = new List<Post>();
 
         foreach (var follow in following)
         {
-            var userPosts = await GetPostsByUserId(follow.FollowsId, 1, 100);
+            var userPosts = await GetPostsByUserId(follow.FollowsId);
             posts.AddRange(userPosts);
         }
         return posts;

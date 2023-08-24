@@ -19,7 +19,7 @@ public class PostController : ControllerBase
     public PostController(IMediator mediator) => _mediator = mediator;
 
     [HttpGet("posts/{pageIndex}/{pageSize}")]
-    public async Task<ActionResult<List<Post>>> GetPosts(int pageIndex, int pageSize)
+    public async Task<ActionResult<List<Post>>> GetPosts(int pageIndex = 1, int pageSize = 10)
     {
         if (pageIndex < 1 || pageSize < 1)
     {
@@ -42,7 +42,7 @@ public async Task<ActionResult<Post>> GetPostById(Guid postId)
     return Ok(post);
 }
 [HttpGet("posts/user/{userId}/{pageIndex}/{pageSize}")]
-public async Task<ActionResult<Post>> GetPostsByUserId(Guid userId, int pageIndex, int pageSize)
+public async Task<ActionResult<Post>> GetPostsByUserId(Guid userId, int pageIndex = 1, int pageSize = 10)
 {
     if (pageIndex < 1 || pageSize < 1)
     {
@@ -94,15 +94,10 @@ public async Task<ActionResult<BaseCommandResponse>> DeletePost(Guid userId, Gui
 
     return BadRequest(response);
 }
-[HttpGet("following/posts/{userId}/{pageIndex}/{pageSize}")]
-public async Task<ActionResult<Post>> GetFollowingPosts(Guid userId, int pageIndex, int pageSize)
+[HttpGet("following/posts/{userId}")]
+public async Task<ActionResult<Post>> GetFollowingPosts(Guid userId)
 {
-    
-        if (pageIndex < 1 || pageSize < 1)
-    {
-        return BadRequest("Invalid page index or page size.");
-    }
-    var request = new GetFollowingPostsRequest(userId, pageIndex, pageSize);
+    var request = new GetFollowingPostsRequest(userId);
     var posts = await _mediator.Send(request);
     return Ok(posts);
 }

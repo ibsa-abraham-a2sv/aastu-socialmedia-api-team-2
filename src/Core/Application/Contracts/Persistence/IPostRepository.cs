@@ -10,7 +10,7 @@ public interface IPostRepository: IGenericRepository<Post>
     Task<List<Post>> GetPostsByUserId(Guid userId, int pageIndex, int pageSize);
 
     Task<List<Post>> GetPosts(int pageIndex, int pageSize);
-    Task<List<Post>> GetFollowingPosts(Guid userId,int pageIndex, int pageSize); 
+    Task<List<Post>> GetFollowingPosts(Guid userId); 
     Task<Guid> CreatePost(Post post);
     Task UpdatePost(Post post);
     Task DeletePost(Guid userId, Guid postId);
