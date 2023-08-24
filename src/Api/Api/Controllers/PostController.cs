@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
-[Route("api/[controller]")]
+[Route("api")]
 [ApiController]
 // [Authorize]
 public class PostController : ControllerBase
@@ -18,7 +18,7 @@ public class PostController : ControllerBase
 
     public PostController(IMediator mediator) => _mediator = mediator;
 
-    [HttpGet("posts")]
+    [HttpGet("posts/{pageIndex}/{pageSize}")]
     public async Task<ActionResult<List<Post>>> GetPosts(int pageIndex, int pageSize)
     {
         if (pageIndex < 1 || pageSize < 1)
@@ -41,10 +41,14 @@ public async Task<ActionResult<Post>> GetPostById(Guid postId)
 
     return Ok(post);
 }
-[HttpGet("posts/user/{userId}")]
-public async Task<ActionResult<Post>> GetPostsByUserId(Guid userId)
+[HttpGet("posts/user/{userId}/{pageIndex}/{pageSize}")]
+public async Task<ActionResult<Post>> GetPostsByUserId(Guid userId, int pageIndex, int pageSize)
 {
-    var request = new GetPostsByUserIdRequest(userId);
+    if (pageIndex < 1 || pageSize < 1)
+    {
+        return BadRequest("Invalid page index or page size.");
+    }
+    var request = new GetPostsByUserIdRequest(userId, pageIndex, pageSize);
     var posts = await _mediator.Send(request);
     return Ok(posts);
 }
@@ -90,10 +94,15 @@ public async Task<ActionResult<BaseCommandResponse>> DeletePost(Guid userId, Gui
 
     return BadRequest(response);
 }
-[HttpGet("following/posts/{userId}")]
-public async Task<ActionResult<Post>> GetFollowingPosts(Guid userId)
+[HttpGet("following/posts/{userId}/{pageIndex}/{pageSize}")]
+public async Task<ActionResult<Post>> GetFollowingPosts(Guid userId, int pageIndex, int pageSize)
 {
-    var request = new GetFollowingPostsRequest(userId);
+    
+        if (pageIndex < 1 || pageSize < 1)
+    {
+        return BadRequest("Invalid page index or page size.");
+    }
+    var request = new GetFollowingPostsRequest(userId, pageIndex, pageSize);
     var posts = await _mediator.Send(request);
     return Ok(posts);
 }

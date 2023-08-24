@@ -13,7 +13,7 @@ public class GetPostsByUserIdRequestHandler : IRequestHandler<GetPostsByUserIdRe
     }
     public async Task<List<Domain.Post.Post>> Handle(GetPostsByUserIdRequest request, CancellationToken cancellationToken)
     {
-        var response = await _unitOfWork.PostRepository.GetPostsByUserId(request.userId);
+        var response = await _unitOfWork.PostRepository.GetPostsByUserId(request.userId,request.pageIndex, request.pageSize);
 
         return response;
     }

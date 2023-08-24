@@ -13,7 +13,7 @@ public class GetFollowingPostsRequestHandler : IRequestHandler<GetFollowingPosts
     }
     public async Task <List<Domain.Post.Post>> Handle(GetFollowingPostsRequest request, CancellationToken cancellationToken)
     {
-        var response = await _unitOfWork.PostRepository.GetFollowingPosts(request.userId);
+        var response = await _unitOfWork.PostRepository.GetFollowingPosts(request.userId, request.pageIndex, request.pageSize);
 
         return response;
     }
