@@ -22,36 +22,38 @@ public class PostRepository : GenericRepository<Post>, IPostRepository
         return results;
     }
 
-    public async Task<List<Post>> GetPosts()
+    public async Task<List<Post>> GetPosts(int pageIndex, int pageSize)
     {
 
-        var results = await _dbContext.Posts.ToListAsync();
+        var results = await _dbContext.Posts.OrderByDescending(p => p.CreatedAt) 
+        .Skip((pageIndex - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();;
         return results;
-
     }
-    public async Task<Guid> CreatePost(PostDto postDto)
+    public async Task<Guid> CreatePost(Post post)
 {
-    var newPost = new Post
-    {
-        UserId = postDto.UserId,
-        Content = postDto.Content,
-        CreatedAt = DateTime.UtcNow
+    // var newPost = new Post
+    // {
+    //     UserId = postDto.UserId,
+    //     Content = postDto.Content,
+    //     CreatedAt = DateTime.UtcNow
    
-    };
-
-    _dbContext.Posts.Add(newPost);
+    // };
+   
+    _dbContext.Posts.Add(post);
     await _dbContext.SaveChangesAsync();
-    return newPost.Id;
+    return post.Id;
 }
 
-    public async Task UpdatePost(UpdatePostDto updatePost)
+    public async Task UpdatePost(Post post)
     {
         
 
-        var existingPost = await _dbContext.Posts.FindAsync(updatePost.Id);
-        if (existingPost != null && existingPost.UserId == updatePost.UserId)
+        var existingPost = await _dbContext.Posts.FindAsync(post.Id);
+        if (existingPost != null && existingPost.UserId == post.UserId)
         {
-            existingPost.Content = updatePost.Content;
+            existingPost.Content = post.Content;
             existingPost.UpdatedAt = DateTime.UtcNow;
             _dbContext.Update(existingPost);
             await _dbContext.SaveChangesAsync(); 
@@ -59,13 +61,13 @@ public class PostRepository : GenericRepository<Post>, IPostRepository
         }
         
     }
-    public async Task DeletePost(DeletePostDto postDeleteDto)
+    public async Task DeletePost(Guid userId, Guid postId)
 {
    
-    var existingPost = await _dbContext.Posts.FindAsync(postDeleteDto.PostId);
+    var existingPost = await _dbContext.Posts.FindAsync(postId);
     Console.WriteLine(existingPost);
 
-    if (existingPost != null && existingPost.UserId == postDeleteDto.UserId)
+    if (existingPost != null && existingPost.UserId == userId)
     {
         _dbContext.Posts.Remove(existingPost);
         await _dbContext.SaveChangesAsync();
@@ -77,6 +79,19 @@ public class PostRepository : GenericRepository<Post>, IPostRepository
         var results = await _dbContext.Posts.Where(post => post.UserId == userId).ToListAsync();
         return results;
     }
+    public async Task<List<Post>> GetFollowingPosts(Guid userId)
+    {
+        var following = await _dbContext.Follows.Where(follow => follow.UserId == userId).ToListAsync();
+         var posts = new List<Post>();
+        
+        foreach (var follow in following)
+    {
+        var userPosts = await GetPostsByUserId(follow.FollowsId);
+        posts.AddRange(userPosts);
+    }
+    return posts;
+    }
+   
    
 
 }

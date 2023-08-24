@@ -19,9 +19,13 @@ public class PostController : ControllerBase
     public PostController(IMediator mediator) => _mediator = mediator;
 
     [HttpGet("posts")]
-    public async Task<ActionResult<List<Post>>> GetPosts()
+    public async Task<ActionResult<List<Post>>> GetPosts(int pageIndex, int pageSize)
     {
-        var posts = await _mediator.Send(new GetPostsRequest());
+        if (pageIndex < 1 || pageSize < 1)
+    {
+        return BadRequest("Invalid page index or page size.");
+    }
+        var posts = await _mediator.Send(new GetPostsRequest(pageIndex, pageSize));
         return Ok(posts);
     }
 [HttpGet("posts/{postId}")]
@@ -73,9 +77,9 @@ public async Task<ActionResult<BaseCommandResponse>> UpdatePost(UpdatePostDto  p
     return BadRequest(response);
 }
 [HttpDelete("posts")]
-public async Task<ActionResult<BaseCommandResponse>> DeletePost(DeletePostDto  postDeleteDto)
+public async Task<ActionResult<BaseCommandResponse>> DeletePost(Guid userId, Guid postId)
 {
-    var request = new DeletePostRequest(postDeleteDto);
+    var request = new DeletePostRequest(userId, postId);
 
     var response = await _mediator.Send(request);
 
@@ -85,6 +89,13 @@ public async Task<ActionResult<BaseCommandResponse>> DeletePost(DeletePostDto  p
     }
 
     return BadRequest(response);
+}
+[HttpGet("following/posts/{userId}")]
+public async Task<ActionResult<Post>> GetFollowingPosts(Guid userId)
+{
+    var request = new GetFollowingPostsRequest(userId);
+    var posts = await _mediator.Send(request);
+    return Ok(posts);
 }
 
    

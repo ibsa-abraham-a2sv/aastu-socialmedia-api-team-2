@@ -13,7 +13,7 @@ public class GetPostsRequestHandler : IRequestHandler<GetPostsRequest, List<Doma
     }
     public async Task<List<Domain.Post.Post>> Handle(GetPostsRequest request, CancellationToken cancellationToken)
     {
-        var response = await _unitOfWork.PostRepository.GetPosts();
+        var response = await _unitOfWork.PostRepository.GetPosts(request.pageIndex, request.pageSize);
 
         return response;
     }

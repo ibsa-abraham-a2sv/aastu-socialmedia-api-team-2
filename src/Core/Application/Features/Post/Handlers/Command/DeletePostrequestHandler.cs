@@ -18,12 +18,12 @@ namespace Application.Features.Post.Handlers.Command
 
         public async Task<BaseCommandResponse> Handle(DeletePostRequest request, CancellationToken cancellationToken)
         {
-            var existingPost = await _unitOfWork.PostRepository.GetPost(request.postDeleteDto.PostId);
+            var existingPost = await _unitOfWork.PostRepository.GetPost(request.postId);
            
 
-            if (existingPost != null && existingPost.UserId == request.postDeleteDto.UserId)
+            if (existingPost != null && existingPost.UserId == request.userId)
             {
-                await _unitOfWork.PostRepository.DeletePost(request.postDeleteDto);
+                await _unitOfWork.PostRepository.DeletePost(request.userId,request.postId);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
                 
                 return new BaseCommandResponse

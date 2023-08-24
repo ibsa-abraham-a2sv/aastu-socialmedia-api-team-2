@@ -3,4 +3,4 @@ using Application.Responses;
 using MediatR;
 
 namespace Application.Features.Post.Requests.Command;
-public record DeletePostRequest(DeletePostDto postDeleteDto) : IRequest<BaseCommandResponse>;
+public record DeletePostRequest(Guid userId, Guid postId) : IRequest<BaseCommandResponse>;
