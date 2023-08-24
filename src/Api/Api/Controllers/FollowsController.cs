@@ -26,7 +26,7 @@ public class FollowsController : ControllerBase
     }
 
     [HttpGet("followers")]
-    public async Task<ActionResult<List<Follows>>> GetFollowers()
+    public async Task<ActionResult<List<FollowsReturnDto>>> GetFollowers()
     {
         var id = _contextAccessor.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
         if (id == null) throw new UnauthorizedAccessException("user authentication needed");
