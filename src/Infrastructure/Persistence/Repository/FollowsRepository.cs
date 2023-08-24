@@ -40,6 +40,8 @@ public class FollowsRepository : GenericRepository<Follows>, IFollowsRepository
         {
             _dbContext.Follows.Remove(entry);
         }
+
+        await _dbContext.SaveChangesAsync();
         
         return Unit.Value;
     }
@@ -56,5 +58,15 @@ public class FollowsRepository : GenericRepository<Follows>, IFollowsRepository
         var results = await _dbContext.Follows.Where(user => user.UserId == userId).ToListAsync();
 
         return results;
+    }
+
+    public async Task<int> GetFollowingCount(Guid userId)
+    {
+        return await _dbContext.Follows.Where(u => u.UserId == userId).CountAsync();
+    }
+
+    public async Task<int> GetFollowersCount(Guid userId)
+    {
+        return await _dbContext.Follows.Where(u => u.FollowsId == userId).CountAsync();
     }
 }
