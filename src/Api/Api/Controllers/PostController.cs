@@ -1,4 +1,5 @@
-using Application.Features.Post.Requests.Commands;
+using Application.DTOs.Post;
+using Application.Features.Post.Requests.Command;
 using Application.Features.Post.Requests.Queries;
 using Application.Responses;
 using Domain.Post;
@@ -8,9 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
-[Route("api/[controller]/{id:guid}")]
+[Route("api/[controller]")]
 [ApiController]
-[Authorize]
+// [Authorize]
 public class PostController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -18,30 +19,73 @@ public class PostController : ControllerBase
     public PostController(IMediator mediator) => _mediator = mediator;
 
     [HttpGet("posts")]
-    public async Task<ActionResult<List<Post>>> GetPosts(Guid id)
+    public async Task<ActionResult<List<Post>>> GetPosts()
     {
-        var followers = await _mediator.Send(new GetFollowersRequest(id));
-        return Ok(followers);
+        var posts = await _mediator.Send(new GetPostsRequest());
+        return Ok(posts);
+    }
+[HttpGet("posts/{postId}")]
+public async Task<ActionResult<Post>> GetPostById(Guid postId)
+{
+    var request = new GetPostRequest(postId);
+    var post = await _mediator.Send(request);
+
+    if (post == null)
+    {
+        return NotFound(); 
     }
 
-    [HttpGet("following")]
-    public async Task<ActionResult<List<Follows>>> GetFollowing(Guid id)
-    {
-        var following = await _mediator.Send(new GetFollowingRequest(id));
-        return Ok(following);
-    }
+    return Ok(post);
+}
+[HttpGet("posts/user/{userId}")]
+public async Task<ActionResult<Post>> GetPostsByUserId(Guid userId)
+{
+    var request = new GetPostsByUserIdRequest(userId);
+    var posts = await _mediator.Send(request);
+    return Ok(posts);
+}
+[HttpPost("posts")]
+public async Task<ActionResult<BaseCommandResponse>> CreatePost(PostDto postDto)
+{
+    var request = new CreatePostRequest(postDto);
 
-    [HttpPost("{followsId:guid}")]
-    public async Task<ActionResult<BaseCommandResponse>> CreateFollowing(Guid id, Guid followsId)
+    var response = await _mediator.Send(request);
+
+    if (response.Success)
     {
-        var response = await _mediator.Send(new CreateFollowingRequest(id, followsId));
         return Ok(response);
     }
 
-    [HttpDelete("{followsId:guid}")]
-    public async Task<ActionResult<Unit>> RemoveFollowing(Guid id, Guid followsId)
+    return BadRequest(response);
+}
+[HttpPatch("posts")]
+public async Task<ActionResult<BaseCommandResponse>> UpdatePost(UpdatePostDto  postUpdateDto)
+{
+    var request = new UpdatePostRequest(postUpdateDto);
+
+    var response = await _mediator.Send(request);
+
+    if (response.Success)
     {
-        var response = await _mediator.Send(new RemoveFollowingRequest(id, followsId));
-        return NoContent();
+        return Ok(response);
     }
+
+    return BadRequest(response);
+}
+[HttpDelete("posts")]
+public async Task<ActionResult<BaseCommandResponse>> DeletePost(DeletePostDto  postDeleteDto)
+{
+    var request = new DeletePostRequest(postDeleteDto);
+
+    var response = await _mediator.Send(request);
+
+    if (response.Success)
+    {
+        return Ok(response);
+    }
+
+    return BadRequest(response);
+}
+
+   
 }

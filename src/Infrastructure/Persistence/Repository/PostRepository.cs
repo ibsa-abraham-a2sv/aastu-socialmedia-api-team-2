@@ -18,47 +18,63 @@ public class PostRepository : GenericRepository<Post>, IPostRepository
 
     public async Task<Post> GetPost(Guid postId)
     {
-        var results = await _dbContext.Post.Where(post => post.Id == postId).ToListAsync();
+        var results = await _dbContext.Posts.Where(post => post.Id == postId).FirstOrDefaultAsync();
         return results;
     }
 
     public async Task<List<Post>> GetPosts()
     {
 
-        var results = await _dbContext.Post.ToListAsync();
+        var results = await _dbContext.Posts.ToListAsync();
         return results;
 
     }
+    public async Task<Guid> CreatePost(PostDto postDto)
+{
+    var newPost = new Post
+    {
+        UserId = postDto.UserId,
+        Content = postDto.Content,
+        CreatedAt = DateTime.UtcNow
+   
+    };
+
+    _dbContext.Posts.Add(newPost);
+    await _dbContext.SaveChangesAsync();
+    return newPost.Id;
+}
 
     public async Task UpdatePost(UpdatePostDto updatePost)
     {
+        
 
-        var existingPost = await _dbContext.Post.FindAsync(updatePost.PostId);
-        if (existingPost != null)
+        var existingPost = await _dbContext.Posts.FindAsync(updatePost.Id);
+        if (existingPost != null && existingPost.UserId == updatePost.UserId)
         {
-
             existingPost.Content = updatePost.Content;
-
-
+            existingPost.UpdatedAt = DateTime.UtcNow;
             _dbContext.Update(existingPost);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(); 
 
         }
+        
     }
     public async Task DeletePost(DeletePostDto postDeleteDto)
 {
-    var existingPost = await _dbContext.Post.FindAsync(postDeleteDto.PostId);
+   
+    var existingPost = await _dbContext.Posts.FindAsync(postDeleteDto.PostId);
+    Console.WriteLine(existingPost);
 
     if (existingPost != null && existingPost.UserId == postDeleteDto.UserId)
     {
-        _dbContext.Post.Remove(existingPost);
+        _dbContext.Posts.Remove(existingPost);
         await _dbContext.SaveChangesAsync();
     }
 }
 
     public async Task<List<Post>> GetPostsByUserId(Guid userId)
     {
-        var results = await _dbContext.Post.Where(post => post.UserId == userId).ToListAsync();
+        var results = await _dbContext.Posts.Where(post => post.UserId == userId).ToListAsync();
         return results;
     }
    

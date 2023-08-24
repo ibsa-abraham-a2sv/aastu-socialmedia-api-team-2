@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace Application.DTOs.Post
 {
-    public class UpdatePostDto
+    public class GetPostsByUserIdDto
     {
-        public Guid Id { get; set; } 
-        public Guid UserId { get; set; } 
-        public string Content { get; set; }
+            public Guid UserId { get; set; } 
     }
 }
-
