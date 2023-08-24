@@ -6,14 +6,14 @@ namespace Application.Features.Follows.Handlers.Queries;
 
 public class GetFollowingRequestHandler : IRequestHandler<GetFollowingRequest, List<Domain.Follows.Follows>>
 {
-    private readonly IFollowsRepository _followsRepository;
+    private readonly IUnitOfWork _unitOfWork;
         
-    public GetFollowingRequestHandler(IFollowsRepository followsRepository) {
-        _followsRepository = followsRepository;
+    public GetFollowingRequestHandler(IUnitOfWork unitOfWork) {
+        _unitOfWork = unitOfWork;
     }
     public async Task<List<Domain.Follows.Follows>> Handle(GetFollowingRequest request, CancellationToken cancellationToken)
     {
-        var results = await _followsRepository.GetFollowing(request.Id);
+        var results = await _unitOfWork.FollowsRepository.GetFollowing(request.Id);
 
         return results;
     }

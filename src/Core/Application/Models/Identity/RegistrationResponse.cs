@@ -1,7 +1,7 @@
-﻿namespace SocialAsync.Application.Models.Identity
+﻿namespace Application.Models.Identity
 {
     public class RegistrationResponse
     {
-        public string UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
     }
 }
