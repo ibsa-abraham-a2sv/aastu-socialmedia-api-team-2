@@ -22,7 +22,7 @@ namespace Application.Features.Comments.Handlers.Queries
         }
         public async Task<List<CommentsOfPostDto>> Handle(GetCommentsByPostIdRequest request, CancellationToken cancellationToken)
         {
-            var comments = await _unitOfWork.CommentRepository.GetCommentsByPostId(request.PostId);
+            var comments = await _unitOfWork.CommentRepository.GetCommentsByPostId(request.PostId, request.pageIndex, request.pageSize);
             return _mapper.Map<List<CommentsOfPostDto>>(comments);
         }
     }

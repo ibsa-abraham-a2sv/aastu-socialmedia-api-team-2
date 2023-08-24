@@ -17,15 +17,23 @@ namespace Persistence.Repository
             _dbContext = dbContext;
         }
 
-        public async Task<IReadOnlyList<Comment>> GetCommentsByPostId(Guid PostId)
+        public async Task<IReadOnlyList<Comment>> GetCommentsByPostId(Guid PostId, int pageIndex, int pageSize)
         {
-            var comments = await _dbContext.Comments.Where(c => c.PostId == PostId).ToListAsync();
+            var comments = await _dbContext.Comments.Where(c => c.PostId == PostId)
+                                .OrderByDescending(c => c.CreatedAt)
+                                .Skip((pageIndex - 1) * pageSize)
+                                .Take(pageSize)
+                                .ToListAsync();
             return comments;
         }
 
-        public async Task<IReadOnlyList<Comment>> GetCommentsByUserId(Guid UserId)
+        public async Task<IReadOnlyList<Comment>> GetCommentsByUserId(Guid UserId, int pageIndex, int pageSize)
         {
-            var comments = await _dbContext.Comments.Where(c => c.UserId == UserId).ToListAsync();
+            var comments = await _dbContext.Comments.Where(c => c.UserId == UserId)
+                                .OrderByDescending(c => c.CreatedAt)
+                                .Skip((pageIndex - 1) * pageSize)
+                                .Take(pageSize)
+                                .ToListAsync();
             return comments;
         }
     }

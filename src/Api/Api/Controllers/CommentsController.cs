@@ -30,16 +30,26 @@ namespace Api.Controllers
         }
 
         [HttpGet("posts/{postId:Guid}/comments")]
-        public async Task<ActionResult<List<CommentsOfPostDto>>> GetCommentsOfPost(Guid postId)
+        public async Task<ActionResult<List<CommentsOfPostDto>>> GetCommentsOfPost(Guid postId, int pageIndex = 1, int pageSize = 10)
         {
-            var comments = await _mediator.Send(new GetCommentsByPostIdRequest { PostId = postId });
+            if (pageIndex < 1 || pageSize < 1)
+            {
+                return BadRequest("Invalid page index or page size.");
+            }
+
+            var comments = await _mediator.Send(new GetCommentsByPostIdRequest { PostId = postId, pageIndex = pageIndex, pageSize = pageSize });
             return Ok(comments);
         }
 
         [HttpGet("users/{userId:Guid}/comments")]
-        public async Task<ActionResult<List<CommentsOfUserDto>>> GetCommentsOfUser(Guid userId)
+        public async Task<ActionResult<List<CommentsOfUserDto>>> GetCommentsOfUser(Guid userId, int pageIndex = 1, int pageSize = 10)
         {
-            var comments = await _mediator.Send(new GetCommentsByUserIdRequest { UserId = userId });
+            if (pageIndex < 1 || pageSize < 1)
+            {
+                return BadRequest("Invalid page index or page size.");
+            }
+            
+            var comments = await _mediator.Send(new GetCommentsByUserIdRequest { UserId = userId, pageIndex = pageIndex, pageSize = pageSize });
             return Ok(comments);
         }
 
