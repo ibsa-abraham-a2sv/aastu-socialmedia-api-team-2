@@ -1,9 +1,11 @@
-﻿using Application.Contracts.Identity;
+﻿using System.Security.Claims;
+using Application.Contracts.Identity;
 using Application.DTOs.User;
 using Application.Exceptions;
 using Application.Models.Identity;
 using Identity.Models;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
 namespace Identity.Services;
@@ -11,11 +13,14 @@ namespace Identity.Services;
 public class UserService : IUserService
 {
     private readonly UserManager<ApplicationUser> _userManager;
-
+    // private readonly IHttpContextAccessor _contextAccessor;
     public UserService(UserManager<ApplicationUser> userManager)
     {
         _userManager = userManager;
+        // _contextAccessor = httpAccessor;
     }
+
+    // public string userId {get => _contextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier); }
 
     public async Task<User> GetUserById(string userId)
     {
@@ -33,7 +38,6 @@ public class UserService : IUserService
                 Lastname = user.LastName!,
                 Bio = user.Bio,
                 BirthDate = user.BirthDate,
-                ProfilePicture = user.ProfilePicture,
                 DateCreated = user.DateCreated
             };
         throw new NotFoundException("User", userId);
@@ -80,6 +84,9 @@ public class UserService : IUserService
 
     public async Task UploadProfilePicture(string userId, byte[] picture)
     {
+        // check if user is logged in by current user
+        // if (userId != this.userId)
+        //     throw new UnauthorizedAccessException("You are not authorized to perform this action.");
         // get the user
         var user = await _userManager.FindByIdAsync(userId);
 
@@ -115,4 +122,5 @@ public class UserService : IUserService
         // get the profile picture
         return user.ProfilePicture;
     }
+    
 }
