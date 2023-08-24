@@ -4,7 +4,6 @@ using Application.DTOs.Follows;
 using Application.Features.Follows.Requests.Commands;
 using Application.Features.Follows.Requests.Queries;
 using Application.Responses;
-using Domain.Follows;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,7 +35,7 @@ public class FollowsController : ControllerBase
     }
 
     [HttpGet("following")]
-    public async Task<ActionResult<List<Follows>>> GetFollowing()
+    public async Task<ActionResult<FollowsReturnDto>> GetFollowing()
     {
         var id = _contextAccessor.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
         
@@ -67,7 +66,7 @@ public class FollowsController : ControllerBase
     }
     
     [HttpGet("following/count")]
-    public async Task<ActionResult<List<Follows>>> GetFollowingCount()
+    public async Task<ActionResult<int>> GetFollowingCount()
     {
         var id = _contextAccessor.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
         if (id == null) throw new UnauthorizedAccessException("user authentication needed");
@@ -77,7 +76,7 @@ public class FollowsController : ControllerBase
     }
     
     [HttpGet("followers/count")]
-    public async Task<ActionResult<List<Follows>>> GetFollowersCount()
+    public async Task<ActionResult<int>> GetFollowersCount()
     {
         var id = _contextAccessor.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
         if (id == null) throw new UnauthorizedAccessException("user authentication needed");
