@@ -5,6 +5,7 @@ using Application.Contracts.Identity;
 using Application.Exceptions;
 using Application.Models.Identity;
 using Identity.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -136,5 +137,8 @@ namespace Identity.Services
                 signingCredentials: signingCredentials);
             return jwtSecurityToken;
         }
+
     }
+    
+    
 }
