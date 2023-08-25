@@ -26,6 +26,9 @@ public static class PersistenceServiceRegistration
         services.AddScoped<INotificationRepository, NotificationRepository>();
         services.AddScoped<IUserConnectionMapRepository, UserConnectionMapRepository>();
         services.AddSignalRCore();
+
+        services.AddScoped<ILikesRepository, LikesRepository>();
+        services.AddScoped<IUnlikesRepository, UnlikesRepository>();
         return services;
     } 
 }

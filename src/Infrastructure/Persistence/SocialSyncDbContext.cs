@@ -1,4 +1,6 @@
 ﻿using Domain.Follows;
+using Domain.Likes;
+using Domain.Unlikes;
 using Domain.Notification;
 using Domain.UserConnectionIdMap;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +17,8 @@ public class SocialSyncDbContext : AuditableDbContext
     }
 
     public DbSet<Follows> Follows { get; set; } = null!;
+    public DbSet<Likes> Likes { get; set; } = null!;
+    public DbSet<Unlikes> Unlikes { get; set; } = null!;
     public DbSet<Notification> Notifications { get; set; } = null!;
     public DbSet<UserConnectionMapping> UserConnectionMapping { get; set; } = null!;
 }

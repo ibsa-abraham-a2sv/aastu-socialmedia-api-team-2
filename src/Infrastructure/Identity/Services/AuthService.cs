@@ -1,12 +1,14 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Application.Contracts.Identity;
+using Application.Exceptions;
+using Application.Models.Identity;
 using Identity.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using SocialAsync.Application.Contracts.Identity;
-using SocialAsync.Application.Models.Identity;
 
 namespace Identity.Services
 {
@@ -28,17 +30,18 @@ namespace Identity.Services
         public async Task<AuthResponse> Login(AuthRequest request)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
-
+            
+      
             if (user == null)
             {
-                throw new Exception($"User with {request.Email} not found.");
+                throw new BadRequestException($"User with {request.Email} not found.");
             }
 
             var result = await _signInManager.PasswordSignInAsync(user.UserName!, request.Password, false, lockoutOnFailure: false);
 
             if (!result.Succeeded)
             {
-                throw new Exception($"Credentials for '{request.Email} aren't valid'.");
+                throw new BadRequestException($"Credentials for '{request.Email} aren't valid'.");
             }
 
             JwtSecurityToken jwtSecurityToken = await GenerateToken(user);
@@ -60,14 +63,14 @@ namespace Identity.Services
 
             if (existingUser != null)
             {
-                throw new Exception($"Username '{request.UserName}' already exists.");
+                throw new BadRequestException($"Username '{request.UserName}' already exists.");
             }
             
             var existingEmail = await _userManager.FindByEmailAsync(request.Email);
 
             if (existingEmail != null)
             {
-                throw new Exception($"Email {request.Email } already exists.");
+                throw new BadRequestException($"Email {request.Email } already exists.");
             }
             
             
@@ -77,6 +80,8 @@ namespace Identity.Services
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 UserName = request.UserName,
+                BirthDate = request.BirthDate,
+                PasswordComfirmation = request.PasswordComfirmation,
                 EmailConfirmed = true
             };
             
@@ -89,8 +94,13 @@ namespace Identity.Services
             }
             else
             {
-                var errors = result.Errors.Select(er => er.Description).ToArray();
-                throw new Exception($"{string.Join(Environment.NewLine, errors)}");
+                StringBuilder str = new StringBuilder();
+                foreach (var err in result.Errors)
+                {
+                    str.AppendFormat("•{0}\n", err.Description);
+                }
+                
+                throw new BadRequestException($"{str}");
             }
             
         }
@@ -127,5 +137,8 @@ namespace Identity.Services
                 signingCredentials: signingCredentials);
             return jwtSecurityToken;
         }
+
     }
+    
+    
 }

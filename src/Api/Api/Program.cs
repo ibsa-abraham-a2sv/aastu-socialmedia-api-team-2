@@ -8,6 +8,7 @@ using Persistence;
 using Persistence.Repository;
 using Persistence.Service;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -15,7 +16,7 @@ builder.Services.ConfigureApplicationServices();
 builder.Services.ConfigurePersistenceServices(builder.Configuration);
 builder.Services.ConfigureIdentityServices(builder.Configuration);
 builder.Services.AddSignalR();
-
+builder.Services.AddHttpContextAccessor();
 //add swagger documentation
 AddSwaggerDoc(builder.Services);
 
