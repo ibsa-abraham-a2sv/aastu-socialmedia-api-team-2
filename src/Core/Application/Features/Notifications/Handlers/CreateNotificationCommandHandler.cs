@@ -15,29 +15,23 @@ namespace Application.Features.Notifications.Handlers
 {
     public class CreateNotificationRequestHandler : IRequestHandler<CreateNotificationCommand, BaseCommandResponse>
     {
-        private readonly INotificationRepository _notificationRepository;
-        //private readonly IUserRepository _userRepository;
+
         private readonly IMapper _mapper;
-        public CreateNotificationRequestHandler(INotificationRepository notificationRepository, IMapper mapper)
+        private readonly IUnitOfWork _unitOfWork;
+        public CreateNotificationRequestHandler(IUnitOfWork unitOfWork, Mapper mapper)
         {
-            _notificationRepository = notificationRepository;
             _mapper = mapper;
-            //_userRepository = userRepository;
+            _unitOfWork = unitOfWork;
         }
         public async Task<BaseCommandResponse> Handle(CreateNotificationCommand request, CancellationToken cancellationToken)
         {
-            var response = new BaseCommandResponse();
-
-
             var notification = _mapper.Map<Notification>(request.CreateNotificationDto);
-            notification = await _notificationRepository.Add(notification);
-            response.Success = true;
-            response.Message = "Creation successful";
-            response.Id = notification.Id;
+            var response = await _unitOfWork.NotificationRepository.Add(notification);
 
-            
+            //await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return response;
+            return new BaseCommandResponse() { Id = notification.Id, Success = true, Message = "Successfully added the notification request" };
+           
         }
 
     }

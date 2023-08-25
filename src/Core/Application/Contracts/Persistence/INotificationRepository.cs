@@ -12,14 +12,6 @@ namespace Application.Contracts.Persistence
     {
         Task<List<Notification>> GetNotifications(Guid userId);
         Task<Notification> GetNotificationDetail(Guid userId, Guid id);
-        //Task<bool> SendNotificationToUserAsync(Guid UserId, string Message);
-        //Task AddNotificationAsync(NotificationDto notificationDto);
-        //Task<IEnumerable<NotificationDto>> GetAllNotification(Guid userId);
-        //Task<IEnumerable<NotificationDto>> GetAllExistingNotifications();
-
-
-        //Task<bool> SendNotificationToFollowersAsync(string userId, NotificationDto notification);
-        //Task<List<NotificationDto>> GetUnreadNotificationsAsync(string userId);
-        //Task<bool> MarkNotificationAsReadAsync(string notificationId);
+        
     }
 }

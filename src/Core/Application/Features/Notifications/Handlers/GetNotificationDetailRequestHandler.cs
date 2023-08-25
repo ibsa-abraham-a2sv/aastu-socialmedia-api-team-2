@@ -13,16 +13,16 @@ namespace Application.Features.Notifications.Handlers
 {
     public class GetNotificationDetailRequestHandler : IRequestHandler<GetNotificationDetailRequest, NotificationDto>
     {
-        private readonly INotificationRepository _notificationRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public GetNotificationDetailRequestHandler(INotificationRepository notificationRepository, IMapper mapper)
+        public GetNotificationDetailRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _notificationRepository = notificationRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
         public async Task<NotificationDto> Handle(GetNotificationDetailRequest request, CancellationToken cancellationToken)
         {
-            var notification = await _notificationRepository.GetNotificationDetail(request.UserId, request.NotificationId);
+            var notification = await _unitOfWork.NotificationRepository.GetNotificationDetail(request.UserId, request.NotificationId);
             return _mapper.Map<NotificationDto>(notification);
         }
     }

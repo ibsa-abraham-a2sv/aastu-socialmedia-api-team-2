@@ -1,4 +1,5 @@
 ﻿using Application.Contracts.Persistence;
+using Application.DTOs.Follows;
 using Application.DTOs.Notification;
 using Application.Features.Notifications.Requests;
 using AutoMapper;
@@ -13,16 +14,16 @@ namespace Application.Features.Notifications.Handlers
 {
     public class GetNotificationsRequestHandler : IRequestHandler<GetNotificationsRequest, List<NotificationDto>>
     {
-        private readonly INotificationRepository _notificationRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public GetNotificationsRequestHandler(INotificationRepository notificationRepository, IMapper mapper)
+        public GetNotificationsRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _notificationRepository = notificationRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
         public async Task<List<NotificationDto>> Handle(GetNotificationsRequest request, CancellationToken cancellationToken)
         {
-            var notifications = await _notificationRepository.GetNotifications(request.UserId);
+            var notifications = await _unitOfWork.NotificationRepository.GetNotifications(request.UserId);
             return _mapper.Map<List<NotificationDto>>(notifications);
         }
     }

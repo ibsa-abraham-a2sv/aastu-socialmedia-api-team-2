@@ -9,6 +9,7 @@ public class UnitOfWork : IUnitOfWork
     private FollowsRepository? _followsRepository;
     private LikesRepository? _likesRepository;
     private UnlikesRepository? _unlikesRepository;
+    private NotificationRepository? _notificationRepository;
 
     public UnitOfWork(SocialSyncDbContext dbContext)
     {
@@ -31,7 +32,8 @@ public class UnitOfWork : IUnitOfWork
     public IUnlikesRepository UnlikesRepository =>
         _unlikesRepository ??= new UnlikesRepository(_dbContext);
 
-    public INotificationRepository NotificationRepository { get; }
+    public INotificationRepository NotificationRepository =>
+        _notificationRepository ??= new NotificationRepository(_dbContext);
 
     public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {

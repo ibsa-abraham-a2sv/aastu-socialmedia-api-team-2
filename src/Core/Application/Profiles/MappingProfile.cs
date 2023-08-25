@@ -23,6 +23,7 @@ public class MappingProfile : Profile {
 
         CreateMap<UserConnectionMapping, UserConnectionMapDto>().ReverseMap();
         CreateMap<UserConnectionMapping, CreateUserConnectionMappingDTO>().ReverseMap();
+       
         #region Notification
         CreateMap<Notification, NotificationDto>().ReverseMap();
         CreateMap<Notification, CreateNotificationDto>().ReverseMap();

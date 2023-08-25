@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace Persistence.Migrations
+namespace Identity.Migrations
 {
     /// <inheritdoc />
-    public partial class CreatingComment4 : Migration
+    public partial class updated_migration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

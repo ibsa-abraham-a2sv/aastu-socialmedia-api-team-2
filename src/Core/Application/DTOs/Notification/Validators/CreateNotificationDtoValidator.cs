@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Features.Notifications.Requests
+namespace Application.DTOs.Notification.Validators
 {
-    public class GetAllExistingNotification
+    internal class CreateNotificationDtoValidator
     {
     }
 }
