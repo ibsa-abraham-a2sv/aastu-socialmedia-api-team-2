@@ -13,6 +13,7 @@ public static class MockUnitOfWork
         mockUow.Setup(r => r.FollowsRepository).Returns(MockFollowsRepository.GetFollowsRepository().Object);
         mockUow.Setup(r => r.LikesRepository).Returns(MockLikesRepository.GetLikesRepository().Object);
         mockUow.Setup(r => r.UnlikesRepository).Returns(MockUnlikesRepository.GetUnlikesRepository().Object);
+        mockUow.Setup(r => r.CommentRepository).Returns(MockCommentRepository.GetCommentRepository().Object);
 
         return mockUow;
     }

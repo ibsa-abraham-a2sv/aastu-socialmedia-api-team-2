@@ -17,9 +17,9 @@ namespace Persistence.Repository
             _dbContext = dbContext;
         }
 
-        public async Task<IReadOnlyList<Comment>> GetCommentsByPostId(Guid PostId, int pageIndex, int pageSize)
+        public async Task<IReadOnlyList<Comment>> GetCommentsByPostId(Guid postId, int pageIndex, int pageSize)
         {
-            var comments = await _dbContext.Comments.Where(c => c.PostId == PostId)
+            var comments = await _dbContext.Comments.Where(c => c.PostId == postId)
                                 .OrderByDescending(c => c.CreatedAt)
                                 .Skip((pageIndex - 1) * pageSize)
                                 .Take(pageSize)
@@ -27,9 +27,9 @@ namespace Persistence.Repository
             return comments;
         }
 
-        public async Task<IReadOnlyList<Comment>> GetCommentsByUserId(Guid UserId, int pageIndex, int pageSize)
+        public async Task<IReadOnlyList<Comment>> GetCommentsByUserId(Guid userId, int pageIndex, int pageSize)
         {
-            var comments = await _dbContext.Comments.Where(c => c.UserId == UserId)
+            var comments = await _dbContext.Comments.Where(c => c.UserId == userId)
                                 .OrderByDescending(c => c.CreatedAt)
                                 .Skip((pageIndex - 1) * pageSize)
                                 .Take(pageSize)

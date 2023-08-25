@@ -37,7 +37,7 @@ namespace Api.Controllers
                 return BadRequest("Invalid page index or page size.");
             }
 
-            var comments = await _mediator.Send(new GetCommentsByPostIdRequest { PostId = postId, pageIndex = pageIndex, pageSize = pageSize });
+            var comments = await _mediator.Send(new GetCommentsByPostIdRequest { PostId = postId, PageIndex = pageIndex, PageSize = pageSize });
             return Ok(comments);
         }
 
@@ -49,7 +49,7 @@ namespace Api.Controllers
                 return BadRequest("Invalid page index or page size.");
             }
             
-            var comments = await _mediator.Send(new GetCommentsByUserIdRequest { UserId = userId, pageIndex = pageIndex, pageSize = pageSize });
+            var comments = await _mediator.Send(new GetCommentsByUserIdRequest { UserId = userId, PageIndex = pageIndex, PageSize = pageSize });
             return Ok(comments);
         }
 

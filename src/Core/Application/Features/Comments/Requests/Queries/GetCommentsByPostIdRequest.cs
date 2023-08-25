@@ -10,7 +10,7 @@ namespace Application.Features.Comments.Requests.Queries
     public class GetCommentsByPostIdRequest : IRequest<List<CommentsOfPostDto>>
     {
         public Guid PostId { get; set; }
-        public int pageIndex { get; set; } = 1;
-        public int pageSize { get; set; } = 10;
+        public int PageIndex { get; set; } = 1;
+        public int PageSize { get; set; } = 10;
     }
 }
