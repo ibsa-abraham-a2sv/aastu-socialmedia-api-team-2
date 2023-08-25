@@ -7,7 +7,7 @@ public class UnitOfWork : IUnitOfWork
 {
     private readonly SocialSyncDbContext _dbContext;
 
-    private CommentRepository _commentRepository;
+    private CommentRepository? _commentRepository;
     private FollowsRepository? _followsRepository;
     private LikesRepository? _likesRepository;
     private UnlikesRepository? _unlikesRepository;

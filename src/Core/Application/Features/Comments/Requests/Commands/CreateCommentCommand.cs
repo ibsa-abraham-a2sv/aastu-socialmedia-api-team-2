@@ -11,5 +11,6 @@ namespace Application.Features.Comments.Requests.Commands
     public class CreateCommentCommand : IRequest<BaseCommandResponse>
     {
         public required CreateCommentDto CreateCommentDto {get; set;}
+        public Guid UserId {get; set;}
     }
 }

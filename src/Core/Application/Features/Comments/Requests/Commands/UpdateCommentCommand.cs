@@ -11,5 +11,6 @@ namespace Application.Features.Comments.Requests.Commands
     public class UpdateCommentCommand : IRequest<Unit>
     {
         public required UpdateCommentDto UpdateCommentDto { get; set; }
+        public Guid RequestingUserId { get; set; }
     }
 }
