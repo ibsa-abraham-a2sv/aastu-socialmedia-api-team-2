@@ -20,6 +20,8 @@ public class UnitOfWork : IUnitOfWork
 
     public IFollowsRepository FollowsRepository { get; }
 
+    public INotificationRepository NotificationRepository { get; }
+
     public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         await _dbContext.SaveChangesAsync();
