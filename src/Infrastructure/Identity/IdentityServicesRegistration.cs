@@ -20,7 +20,7 @@ namespace Identity
             
             
             services.AddDbContext<BlogSyncIdentityDbContext>(options => 
-                options.UseNpgsql(configuration.GetConnectionString("SocialSyncIdentityConnectionString"),
+                options.UseNpgsql(configuration.GetConnectionString("SocialSyncDbConnection"),
                 b => b.MigrationsAssembly(typeof(BlogSyncIdentityDbContext).Assembly.FullName)));
 
             // services.AddIdentity<ApplicationUser, IdentityRole>()
