@@ -13,14 +13,11 @@ namespace Identity.Services;
 public class UserService : IUserService
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    // private readonly IHttpContextAccessor _contextAccessor;
     public UserService(UserManager<ApplicationUser> userManager)
     {
         _userManager = userManager;
-        // _contextAccessor = httpAccessor;
     }
 
-    // public string userId {get => _contextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier); }
 
     public async Task<User> GetUserById(string userId)
     {
@@ -122,5 +119,19 @@ public class UserService : IUserService
         // get the profile picture
         return user.ProfilePicture;
     }
-    
+
+    public async Task<bool> Exists(string userId)
+    {
+        try
+        {
+            var user = await GetUserById(userId);
+
+        }
+        catch (NotFoundException e)
+        {
+            return false;
+        }
+
+        return true;
+    }
 }

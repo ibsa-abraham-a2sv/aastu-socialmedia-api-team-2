@@ -30,7 +30,7 @@ public class AuthServicesTest
                 LastName = request.LastName,
                 UserName = request.UserName,
                 BirthDate = request.BirthDate,
-                PasswordHash = passwordHasher.HashPassword(null, request.Password),
+                PasswordHash = passwordHasher.HashPassword(null!, request.Password),
                 EmailConfirmed = true,
                 PasswordComfirmation = request.PasswordComfirmation,
             };
@@ -53,7 +53,7 @@ public class AuthServicesTest
                 throw new Exception($"User with {request.Email} not found.");
             }
             var passwordHasher = new PasswordHasher<ApplicationUser>();
-            var result = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);
+            var result = passwordHasher.VerifyHashedPassword(user, user.PasswordHash!, request.Password);
             if (result == PasswordVerificationResult.Failed)
             {
                 throw new Exception($"Credentials for '{request.Email} aren't valid'.");
@@ -61,8 +61,8 @@ public class AuthServicesTest
 
             return new AuthResponse()
             {
-                UserName = user.UserName,
-                Email = user.Email,
+                UserName = user.UserName!,
+                Email = user.Email!,
                 Id = user.Id,
                 Token = "token"
             };
@@ -121,6 +121,7 @@ public class AuthServicesTest
         // shouldly assert the user
         result.ShouldNotBeNull();
         result.ShouldBeOfType<AuthResponse>();
+        
         
     }
 }
