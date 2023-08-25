@@ -1,25 +1,21 @@
+
+using Application.DTOs.Follows;
+using Application.DTOs.Likes;
+using Application.DTOs.Unlikes;
 using AutoMapper;
-using Application.DTOs.Post;
-using Domain.Post;
+using Domain.Follows;
+using Domain.Likes;
+using Domain.Unlikes;
 
-namespace Application.MappingProfiles
-{
-    public class PostMappingProfile : Profile
+namespace Application.Profiles;
+
+public class MappingProfile : Profile {
+    public MappingProfile()
     {
-        public PostMappingProfile()
-        {
-            CreateMap<Post, PostDto>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
-                .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
-                .ReverseMap(); 
-             CreateMap<Post, UpdatePostDto>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
-                .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
-                .ReverseMap(); 
+        CreateMap<Likes, LikesDto>().ReverseMap();
+        CreateMap<Unlikes, UnlikesDto>().ReverseMap();
+        CreateMap<Follows, FollowsDto>().ReverseMap();
 
-            
-        }
+        CreateMap<Follows, FollowsReturnDto>().ReverseMap();
     }
 }
