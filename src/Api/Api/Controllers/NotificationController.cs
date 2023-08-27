@@ -23,11 +23,13 @@ namespace Api.Controllers
         }
         // GET: api/<NotificationController>
         [HttpGet("{userId:Guid}")]
-        public async Task<ActionResult<List<NotificationDto>>> Get()
+        public async Task<ActionResult<List<NotificationDto>>> Get(Guid userId)
         {
             var id = _contextAccessor.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
-            if (id == null) throw new UnauthorizedAccessException("user authentication needed");
-
+            //if (id == null) throw new UnauthorizedAccessException("user authentication needed");
+            //var query = await _mediator.Send(new GetNotificationsRequest(new Guid(id)));
+            Console.WriteLine(id);
+            //var query = new GetNotificationsRequest { UserId = new Guid(id) };
             var query = new GetNotificationsRequest { UserId = new Guid(id) };
             var notifications = await _mediator.Send(query);
             return Ok(notifications);

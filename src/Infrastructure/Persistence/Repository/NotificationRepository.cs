@@ -34,11 +34,20 @@ namespace Persistence.Repository
 
         public async Task<List<Notification>> GetNotifications(Guid userId)
         {
-            //var user = await _dbContext.Users.FindAsync(userId);
-            
             var notifications = await _dbContext.Notifications.Where(n => n.UserId == userId).ToListAsync();
-            return notifications;
-            
+
+            if (notifications != null)
+            {
+                foreach (var notification in notifications)
+                {
+                    notification.IsRead = true;
+                }
+
+                await _dbContext.SaveChangesAsync();
+                return notifications;
+            }
+
+            return null;
         }
     }
 

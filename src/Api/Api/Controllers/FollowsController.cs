@@ -66,6 +66,9 @@ public class FollowsController : ControllerBase
             notificationDto.Message = $" followed you recently";
             notificationDto.IsRead = false;
 
+            var command = new CreateNotificationCommand { CreateNotificationDto = notificationDto };
+            var res = await _mediator.Send(command);
+
             //var notificationCommand = new CreateNotificationCommand { CreateNotificationDto = notificationDto };
             //await _mediator.Send(notificationCommand);
         }
