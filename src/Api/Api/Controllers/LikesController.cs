@@ -1,4 +1,6 @@
-﻿using Application.DTOs.Likes;
+﻿using System.Security.Claims;
+using Application.Constants;
+using Application.DTOs.Likes;
 using Application.Features.Likes.Requests.Commands;
 using Application.Features.Likes.Requests.Queries;
 using Domain.Likes;
@@ -11,40 +13,58 @@ namespace Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-//[Authorize]
+[Authorize]
 public class LikesController : ControllerBase
 {
     private readonly IMediator _mediator;
-    public LikesController(IMediator mediator) => _mediator = mediator;
+    private readonly IHttpContextAccessor _contextAccessor;
 
-    [HttpGet("{userId:guid}")]
-    public async Task<ActionResult<List<Likes>>> GetLikes(Guid userId)
+    public LikesController(IMediator mediator, IHttpContextAccessor contextAccessor)
     {
-        var response = await _mediator.Send(new GetLikesRequest(userId));
+        _contextAccessor = contextAccessor;
+        _mediator = mediator;
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<List<Likes>>> GetLikes()
+    {
+        var id = _contextAccessor.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
+        if (id == null) throw new UnauthorizedAccessException("user authentication needed");
+        
+        var response = await _mediator.Send(new GetLikesRequest(new Guid(id)));
         return Ok(response);
     }
 
-    [HttpGet("{userId:guid}/{likesId:guid}")]
-    public async Task<ActionResult<bool>> CheckUserLikes(Guid userId, Guid likesId)
+    [HttpGet("{likesId:guid}")]
+    public async Task<ActionResult<bool>> CheckUserLikes(Guid likesId)
     {
-        var response = await _mediator.Send(new CheckIfUserLikesRequest(userId, likesId));
+        var id = _contextAccessor.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
+        if (id == null) throw new UnauthorizedAccessException("user authentication needed");
+        
+        var response = await _mediator.Send(new CheckIfUserLikesRequest(new Guid(id), likesId));
         return Ok(response);
     }
 
-    [HttpPost("{userId:guid}")]
-    public async Task<ActionResult<Guid>> CreateLike(Guid userId, [FromBody] LikesDto likes)
+    [HttpPost]
+    public async Task<ActionResult<Guid>> CreateLike([FromBody] LikesDto likes)
     {
-        var response = await _mediator.Send(new CreateLikeRequest(userId, likes.LikesId));
+        var id = _contextAccessor.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
+        if (id == null) throw new UnauthorizedAccessException("user authentication needed");
+        
+        var response = await _mediator.Send(new CreateLikeRequest(new Guid(id), likes.LikesId));
 
         if (response == null) return BadRequest("User already likes this post");
 
         return Ok(response);
     }
 
-    [HttpDelete("{userId:guid}")]
-    public async Task<ActionResult<Unit>> RemoveLike(Guid userId, [FromBody] LikesDto likes)
+    [HttpDelete]
+    public async Task<ActionResult<Unit>> RemoveLike([FromBody] LikesDto likes)
     {
-        await _mediator.Send(new RemoveLikeRequest(userId, likes.LikesId));
+        var id = _contextAccessor.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
+        if (id == null) throw new UnauthorizedAccessException("user authentication needed");
+        
+        await _mediator.Send(new RemoveLikeRequest(new Guid(id), likes.LikesId));
         return NoContent();
     }
 

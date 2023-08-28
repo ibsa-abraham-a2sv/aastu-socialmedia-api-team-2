@@ -26,6 +26,7 @@ public class MappingProfile : Profile
         CreateMap<Likes, LikesDto>().ReverseMap();
         CreateMap<Unlikes, UnlikesDto>().ReverseMap();
         CreateMap<Follows, FollowsDto>().ReverseMap();
-    }   
-    
+
+        CreateMap<Follows, FollowsReturnDto>().ReverseMap();
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using Application.Contracts.Persistence;
+using Application.DTOs.Follows;
 using Application.Features.Follows.Handlers.Queries;
 using Application.Features.Follows.Requests.Queries;
 using Application.Profiles;
@@ -29,14 +30,14 @@ public class GetFollowersRequestHandlerTest
     [Fact]  
     public async Task GetFollowersTest()
     {
-        var handler = new GetFollowersRequestHandler(_mockRepo.Object);
+        var handler = new GetFollowersRequestHandler(_mockRepo.Object, _mapper);
 
         var userId = (await _mockRepo.Object.FollowsRepository.GetAll())[0].UserId;
         
 
         var result = await handler.Handle(new GetFollowersRequest(userId), CancellationToken.None);
 
-        result.ShouldBeOfType<List<Domain.Follows.Follows>>();
+        result.ShouldBeOfType<List<FollowsReturnDto>>();
 
         result.Count.ShouldBe(1);
     }  
