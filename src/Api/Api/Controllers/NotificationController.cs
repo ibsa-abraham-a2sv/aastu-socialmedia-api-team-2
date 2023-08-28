@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.SignalR;
 using Persistence.Service;
 using System;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Controllers
 {
@@ -24,11 +25,11 @@ namespace Api.Controllers
             _contextAccessor = contextAccessor;
         }
         // GET: api/<NotificationController>
-        [HttpGet("notifications")]
+        [HttpGet("[action]")]
         public async Task<ActionResult<List<NotificationDto>>> Get()
         {
             var id = _contextAccessor.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
-            Console.WriteLine(id);
+
             var query = new GetNotificationsRequest { UserId = new Guid(id!) };
             var notifications = await _mediator.Send(query);
             return Ok(notifications);
