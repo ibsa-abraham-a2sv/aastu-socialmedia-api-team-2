@@ -12,6 +12,7 @@ namespace Application.Contracts.Persistence
     {
         Task<List<Notification>> GetNotifications(Guid userId);
         Task<Notification> GetNotificationDetail(Guid userId, Guid id);
+      
         
     }
 }
