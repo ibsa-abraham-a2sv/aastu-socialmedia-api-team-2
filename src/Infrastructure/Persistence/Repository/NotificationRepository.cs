@@ -1,5 +1,6 @@
 ﻿using Application.Contracts.Persistence;
 using Application.DTOs.Notification;
+using Application.Exceptions;
 using Domain.Notification;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -47,7 +48,7 @@ namespace Persistence.Repository
                 return notifications;
             }
 
-            return null;
+            throw new NotFoundException("notification",notifications);
         }
     }
 
