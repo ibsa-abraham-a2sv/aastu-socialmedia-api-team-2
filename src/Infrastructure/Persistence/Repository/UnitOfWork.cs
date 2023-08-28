@@ -6,6 +6,8 @@ namespace Persistence.Repository;
 public class UnitOfWork : IUnitOfWork
 {
     private readonly SocialSyncDbContext _dbContext;
+
+    private CommentRepository? _commentRepository;
     private FollowsRepository? _followsRepository;
     private LikesRepository? _likesRepository;
     private UnlikesRepository? _unlikesRepository;
@@ -28,6 +30,9 @@ private PostRepository? _postRepository;
        public IPostRepository PostRepository =>
         _postRepository ??= new PostRepository(_dbContext);
 
+    public ICommentRepository CommentRepository => 
+            _commentRepository ??= new CommentRepository(_dbContext);
+    
     public IFollowsRepository FollowsRepository =>
         _followsRepository ??= new FollowsRepository(_dbContext);
 

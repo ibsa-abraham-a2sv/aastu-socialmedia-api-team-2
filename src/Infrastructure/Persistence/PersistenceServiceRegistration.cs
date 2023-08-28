@@ -22,6 +22,8 @@ public static class PersistenceServiceRegistration
 
         services.AddScoped<IPostRepository, PostRepository>();
 
+        services.AddScoped<ICommentRepository, CommentRepository>();
+
         services.AddScoped<ILikesRepository, LikesRepository>();
         services.AddScoped<IUnlikesRepository, UnlikesRepository>();
 

@@ -1,9 +1,9 @@
 namespace Domain.Common.Models;
 
 public abstract class EntityBase {
-    protected EntityBase(Guid id) => Id = id;
+    public EntityBase(Guid id) => Id = id;
 
-    protected EntityBase() {}
+    public EntityBase() {}
 
     public Guid Id { get; set; }
     public DateTime CreatedAt { get; set; }

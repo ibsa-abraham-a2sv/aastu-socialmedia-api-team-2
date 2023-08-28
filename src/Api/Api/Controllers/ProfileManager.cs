@@ -77,6 +77,7 @@ public class ProfileManager : ControllerBase
         return Ok(File(picture, "image/jpeg"));
     }
     
+    
     // check user id 
     private void CheckUserId(string userId)
     {

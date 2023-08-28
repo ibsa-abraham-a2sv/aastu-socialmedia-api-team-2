@@ -1,9 +1,13 @@
-﻿using Application.Contracts.Persistence;
+﻿using Application.Contracts.Identity;
+using Application.Contracts.Persistence;
 using Application.Features.Follows.Handlers.Commands;
 using Application.Features.Follows.Requests.Commands;
 using Application.Profiles;
 using Application.Responses;
 using AutoMapper;
+using Identity.Models;
+using Identity.Services;
+using Microsoft.AspNetCore.Identity;
 using Moq;
 using Shouldly;
 using UnitTests.Mocks;
@@ -25,6 +29,7 @@ public class CreateFollowingRequestHandlerTest
         });
 
         _mapper = mapperConfig.CreateMapper();
+
 
     }
 
