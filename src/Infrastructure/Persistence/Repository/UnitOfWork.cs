@@ -6,6 +6,8 @@ namespace Persistence.Repository;
 public class UnitOfWork : IUnitOfWork
 {
     private readonly SocialSyncDbContext _dbContext;
+
+    private CommentRepository? _commentRepository;
     private FollowsRepository? _followsRepository;
     private LikesRepository? _likesRepository;
     private UnlikesRepository? _unlikesRepository;
@@ -21,6 +23,9 @@ public class UnitOfWork : IUnitOfWork
         GC.SuppressFinalize(this);
     }
 
+    public ICommentRepository CommentRepository => 
+            _commentRepository ??= new CommentRepository(_dbContext);
+    
     public IFollowsRepository FollowsRepository =>
         _followsRepository ??= new FollowsRepository(_dbContext);
 

@@ -19,6 +19,7 @@ public static class PersistenceServiceRegistration
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<IFollowsRepository, FollowsRepository>();
+        services.AddScoped<ICommentRepository, CommentRepository>();
         services.AddScoped<ILikesRepository, LikesRepository>();
         services.AddScoped<IUnlikesRepository, UnlikesRepository>();
         

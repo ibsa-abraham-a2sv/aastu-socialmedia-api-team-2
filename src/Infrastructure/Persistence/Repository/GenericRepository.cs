@@ -18,9 +18,10 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return entity;
     }
 
-    public Task<bool> Exists(Guid id)
+    public async Task<bool> Exists(Guid id)
     {
-        throw new NotImplementedException();
+        var entity = await Get(id);
+        return entity != null;
     }
 
     public Task Delete(T entity)
@@ -44,6 +45,4 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         _dbContext.Entry(entity).State = EntityState.Modified;
         return Task.CompletedTask;
     }
-
-        
 }

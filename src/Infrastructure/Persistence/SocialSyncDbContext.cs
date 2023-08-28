@@ -1,6 +1,8 @@
-﻿using Domain.Follows;
+﻿using Domain.Comment;
+using Domain.Follows;
 using Domain.Likes;
 using Domain.Unlikes;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence;
@@ -15,6 +17,8 @@ public class SocialSyncDbContext : AuditableDbContext
     }
 
     public DbSet<Follows> Follows { get; set; } = null!;
+    public DbSet<Comment> Comments { get; set; }
     public DbSet<Likes> Likes { get; set; } = null!;
     public DbSet<Unlikes> Unlikes { get; set; } = null!;
+    
 }
