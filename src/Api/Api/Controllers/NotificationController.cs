@@ -8,7 +8,8 @@ using Microsoft.AspNetCore.SignalR;
 using Persistence.Service;
 using System;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
+using Application.DTOs.Comment;
+using Application.Features.Comments.Requests.Commands;
 
 namespace Api.Controllers
 {
@@ -51,6 +52,15 @@ namespace Api.Controllers
             var command = new CreateNotificationCommand { CreateNotificationDto = notificationDto };
             var response = await _mediator.Send(command);
             return Ok(response);
+        }
+
+        [HttpPut("markAsRead")]
+        public async Task<ActionResult> Put(Guid id)
+        {
+            var userId = _contextAccessor.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid) ?? throw new UnauthorizedAccessException("User is not authorized.");
+            var command = new MarkNotificationReadCommand { Id = id };
+            await _mediator.Send(command);
+            return NoContent();
         }
 
     }
