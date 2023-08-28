@@ -13,7 +13,7 @@ public class CreateFollowingRequestHandler : IRequestHandler<CreateFollowingRequ
 
     public async Task<BaseCommandResponse> Handle(CreateFollowingRequest request, CancellationToken cancellationToken) {
         var response = await _unitOfWork.FollowsRepository.Follow(request.UserId, request.FollowsId);
-
+        
         if (response == null)
             return new BaseCommandResponse() { Success = false, Message = "you can't follow this user", };
         

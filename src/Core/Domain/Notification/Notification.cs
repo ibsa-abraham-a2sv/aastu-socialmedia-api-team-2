@@ -10,7 +10,7 @@ namespace Domain.Notification
     public class Notification : EntityBase
     {
         public Guid UserId { get; set; }
-        public string Message { get; set; }
+        public string Message { get; set; } = string.Empty;
         public bool IsRead { get; set; }
                                           
     }

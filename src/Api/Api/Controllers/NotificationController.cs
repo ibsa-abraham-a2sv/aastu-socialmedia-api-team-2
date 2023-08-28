@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.SignalR;
 using Persistence.Service;
 using System;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class NotificationController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -22,15 +24,12 @@ namespace Api.Controllers
             _contextAccessor = contextAccessor;
         }
         // GET: api/<NotificationController>
-        [HttpGet("{userId:Guid}")]
-        public async Task<ActionResult<List<NotificationDto>>> Get(Guid userId)
+        [HttpGet("[action]")]
+        public async Task<ActionResult<List<NotificationDto>>> Get()
         {
             var id = _contextAccessor.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
-            //if (id == null) throw new UnauthorizedAccessException("user authentication needed");
-            //var query = await _mediator.Send(new GetNotificationsRequest(new Guid(id)));
-            Console.WriteLine(id);
-            //var query = new GetNotificationsRequest { UserId = new Guid(id) };
-            var query = new GetNotificationsRequest { UserId = new Guid(id) };
+
+            var query = new GetNotificationsRequest { UserId = new Guid(id!) };
             var notifications = await _mediator.Send(query);
             return Ok(notifications);
         }

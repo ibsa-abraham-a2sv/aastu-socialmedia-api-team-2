@@ -17,6 +17,6 @@ namespace Persistence.Service
         public async Task SendMessage(String message)
         {
             await Clients.All.ReceiveMessage($"{Context.ConnectionId}: {message}");
-        }
+        }     
     }
 }

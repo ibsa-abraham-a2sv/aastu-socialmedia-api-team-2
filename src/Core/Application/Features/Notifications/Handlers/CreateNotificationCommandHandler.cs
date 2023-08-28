@@ -27,7 +27,8 @@ namespace Application.Features.Notifications.Handlers
         {
             var notification = _mapper.Map<Notification>(request.CreateNotificationDto);
             var response = await _unitOfWork.NotificationRepository.Add(notification);
-
+            Console.WriteLine(request.CreateNotificationDto.Message);
+            Console.WriteLine("here");
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return new BaseCommandResponse() { Id = notification.Id, Success = true, Message = "Successfully added the notification request" };
