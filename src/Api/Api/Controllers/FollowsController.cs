@@ -14,7 +14,7 @@ namespace Api.Controllers;
 
 [Route("api/user/[controller]")]
 [ApiController]
-[Authorize]
+// [Authorize]
 public class FollowsController : ControllerBase
 {
     private readonly IMediator _mediator;

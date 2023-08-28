@@ -12,6 +12,9 @@ public class UnitOfWork : IUnitOfWork
     private LikesRepository? _likesRepository;
     private UnlikesRepository? _unlikesRepository;
 
+private PostRepository? _postRepository;
+
+
     public UnitOfWork(SocialSyncDbContext dbContext)
     {
         _dbContext = dbContext;
@@ -22,6 +25,10 @@ public class UnitOfWork : IUnitOfWork
         _dbContext.Dispose();
         GC.SuppressFinalize(this);
     }
+
+
+       public IPostRepository PostRepository =>
+        _postRepository ??= new PostRepository(_dbContext);
 
     public ICommentRepository CommentRepository => 
             _commentRepository ??= new CommentRepository(_dbContext);
@@ -35,6 +42,7 @@ public class UnitOfWork : IUnitOfWork
 
     public IUnlikesRepository UnlikesRepository =>
         _unlikesRepository ??= new UnlikesRepository(_dbContext);
+
 
     public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
