@@ -10,5 +10,6 @@ namespace Identity.Models
         public DateTime? BirthDate { get; set; }
         public byte[]? ProfilePicture { get; set; }
         public string? Bio { get; set; }
+        public string? PasswordComfirmation { get; set; }
     }
 }

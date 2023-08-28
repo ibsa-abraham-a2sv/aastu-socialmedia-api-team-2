@@ -8,7 +8,7 @@ using Application.DTOs.Post.Validators;
 
 namespace Application.Features.Post.Handlers.Command;
 
-internal sealed class CreatePostRequestHandler : IRequestHandler<CreatePostRequest, BaseCommandResponse> {
+public class CreatePostRequestHandler : IRequestHandler<CreatePostRequest, BaseCommandResponse> {
     private readonly IUnitOfWork _unitOfWork;
      private readonly IMapper _mapper;
     public CreatePostRequestHandler(IUnitOfWork unitOfWork, IMapper mapper) {

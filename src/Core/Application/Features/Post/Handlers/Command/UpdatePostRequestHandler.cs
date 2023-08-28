@@ -8,7 +8,7 @@ using Application.DTOs.Post.Validators;
 
 namespace Application.Features.Post.Handlers.Command
 {
-    internal sealed class UpdatePostRequestHandler : IRequestHandler<UpdatePostRequest, BaseCommandResponse>
+    public class UpdatePostRequestHandler : IRequestHandler<UpdatePostRequest, BaseCommandResponse>
     {
         private readonly IUnitOfWork _unitOfWork;
           private readonly IMapper _mapper;
@@ -37,12 +37,12 @@ namespace Application.Features.Post.Handlers.Command
             {
                 existingPost.Content = request.postUpdateDto.Content; 
 
-          await _unitOfWork.PostRepository.UpdatePost(post);
+          var response = await _unitOfWork.PostRepository.UpdatePost(post);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
-                
                 
                 return new BaseCommandResponse
                 {
+                    Id = response,
                     Success = true,
                     Message = "Successfully updated the post"
                 };

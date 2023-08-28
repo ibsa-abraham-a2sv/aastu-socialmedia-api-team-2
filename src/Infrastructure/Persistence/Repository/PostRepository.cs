@@ -22,7 +22,7 @@ public class PostRepository : GenericRepository<Post>, IPostRepository
         return results;
     }
 
-    public async Task<List<Post>> GetPosts(int pageIndex, int pageSize)
+    public async Task<List<Post>> GetPosts(int pageIndex = 1, int pageSize = 10)
     {
 
         var results = await _dbContext.Posts.OrderByDescending(p => p.CreatedAt)
@@ -46,7 +46,7 @@ public class PostRepository : GenericRepository<Post>, IPostRepository
         return post.Id;
     }
 
-    public async Task UpdatePost(Post post)
+    public async Task<Guid> UpdatePost(Post post)
     {
 
 
@@ -57,9 +57,8 @@ public class PostRepository : GenericRepository<Post>, IPostRepository
             existingPost.UpdatedAt = DateTime.UtcNow;
             _dbContext.Update(existingPost);
             await _dbContext.SaveChangesAsync();
-
         }
-
+         return existingPost.Id;
     }
     public async Task DeletePost(Guid userId, Guid postId)
     {
