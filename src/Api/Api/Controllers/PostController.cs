@@ -1,3 +1,6 @@
+using System.Security.Claims;
+using Application.Constants;
+using Application.Contracts.Identity;
 using Application.DTOs.Post;
 using Application.Features.Post.Requests.Command;
 using Application.Features.Post.Requests.Queries;
@@ -15,12 +18,21 @@ namespace Api.Controllers;
 public class PostController : ControllerBase
 {
     private readonly IMediator _mediator;
+     private readonly IHttpContextAccessor _contextAccessor;
+    private readonly IUserService _userService;
 
-    public PostController(IMediator mediator) => _mediator = mediator;
+    public PostController(IMediator mediator, IHttpContextAccessor contextAccessor, IUserService userService)
+    {
+        _contextAccessor = contextAccessor;
+        _mediator = mediator;
+        _userService = userService;
+    }
 
     [HttpGet("posts/{pageIndex}/{pageSize}")]
     public async Task<ActionResult<List<Post>>> GetPosts(int pageIndex = 1, int pageSize = 10)
     {
+         var id = _contextAccessor.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
+        if (id == null) throw new UnauthorizedAccessException("user authentication needed");
         if (pageIndex < 1 || pageSize < 1)
     {
         return BadRequest("Invalid page index or page size.");
@@ -31,6 +43,9 @@ public class PostController : ControllerBase
 [HttpGet("posts/{postId}")]
 public async Task<ActionResult<Post>> GetPostById(Guid postId)
 {
+    var id = _contextAccessor.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
+        
+        if (id == null) throw new UnauthorizedAccessException("user authentication needed");
     var request = new GetPostRequest(postId);
     var post = await _mediator.Send(request);
 
@@ -41,21 +56,33 @@ public async Task<ActionResult<Post>> GetPostById(Guid postId)
 
     return Ok(post);
 }
-[HttpGet("posts/user/{userId}/{pageIndex}/{pageSize}")]
-public async Task<ActionResult<Post>> GetPostsByUserId(Guid userId, int pageIndex = 1, int pageSize = 10)
+[HttpGet("posts/user/{pageIndex}/{pageSize}")]
+public async Task<ActionResult<Post>> GetPostsByUserId(int pageIndex = 1, int pageSize = 10)
 {
+   
+    var id = _contextAccessor.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
+
+        if (id == null) throw new UnauthorizedAccessException("user authentication needed");
     if (pageIndex < 1 || pageSize < 1)
     {
         return BadRequest("Invalid page index or page size.");
     }
-    var request = new GetPostsByUserIdRequest(userId, pageIndex, pageSize);
+    var request = new GetPostsByUserIdRequest(new Guid(id), pageIndex, pageSize);
     var posts = await _mediator.Send(request);
     return Ok(posts);
 }
 [HttpPost("posts")]
-public async Task<ActionResult<BaseCommandResponse>> CreatePost(PostDto postDto)
+public async Task<ActionResult<BaseCommandResponse>> CreatePost(string content)
 {
-    var request = new CreatePostRequest(postDto);
+    var id = _contextAccessor.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
+
+        
+        if (id == null) throw new UnauthorizedAccessException("user authentication needed");
+        
+    var request = new CreatePostRequest(new PostDto{
+        UserId= new Guid(id),   
+        Content= content
+    });
 
     var response = await _mediator.Send(request);
 
@@ -67,9 +94,15 @@ public async Task<ActionResult<BaseCommandResponse>> CreatePost(PostDto postDto)
     return BadRequest(response);
 }
 [HttpPatch("posts")]
-public async Task<ActionResult<BaseCommandResponse>> UpdatePost(UpdatePostDto  postUpdateDto)
+public async Task<ActionResult<BaseCommandResponse>> UpdatePost(Guid postId, string Content)
 {
-    var request = new UpdatePostRequest(postUpdateDto);
+    var id = _contextAccessor.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
+        
+        if (id == null) throw new UnauthorizedAccessException("user authentication needed");
+    var request = new UpdatePostRequest(new UpdatePostDto{
+        Id= postId,
+        Content= Content
+    });
 
     var response = await _mediator.Send(request);
 
@@ -81,9 +114,12 @@ public async Task<ActionResult<BaseCommandResponse>> UpdatePost(UpdatePostDto  p
     return BadRequest(response);
 }
 [HttpDelete("posts")]
-public async Task<ActionResult<BaseCommandResponse>> DeletePost(Guid userId, Guid postId)
+public async Task<ActionResult<BaseCommandResponse>> DeletePost(Guid postId)
 {
-    var request = new DeletePostRequest(userId, postId);
+    var id = _contextAccessor.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
+        
+        if (id == null) throw new UnauthorizedAccessException("user authentication needed");
+    var request = new DeletePostRequest(new Guid(id), postId);
 
     var response = await _mediator.Send(request);
 
@@ -94,10 +130,12 @@ public async Task<ActionResult<BaseCommandResponse>> DeletePost(Guid userId, Gui
 
     return BadRequest(response);
 }
-[HttpGet("following/posts/{userId}")]
-public async Task<ActionResult<Post>> GetFollowingPosts(Guid userId)
+[HttpGet("following/posts")]
+public async Task<ActionResult<Post>> GetFollowingPosts()
 {
-    var request = new GetFollowingPostsRequest(userId);
+    var id = _contextAccessor.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
+        if (id == null) throw new UnauthorizedAccessException("user authentication needed");
+    var request = new GetFollowingPostsRequest(new Guid(id));
     var posts = await _mediator.Send(request);
     return Ok(posts);
 }
