@@ -1,5 +1,4 @@
 ﻿using Application.Contracts.Persistence;
-using Domain.Follows;
 
 namespace Persistence.Repository;
 

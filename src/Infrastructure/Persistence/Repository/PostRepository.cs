@@ -1,7 +1,5 @@
 using Application.Contracts.Persistence;
-using Application.DTOs.Post;
 using Domain.Post;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repository;

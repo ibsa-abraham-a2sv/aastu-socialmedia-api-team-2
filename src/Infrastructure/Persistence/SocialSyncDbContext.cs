@@ -1,16 +1,15 @@
-using Domain.Post;
+﻿using Domain.Post;
 using Domain.Comment;
 using Domain.Follows;
 using Domain.Likes;
 using Domain.Unlikes;
 using Domain.Notification;
-using Microsoft.EntityFrameworkCore;
 
 namespace Persistence;
 
 
 using Microsoft.EntityFrameworkCore;
-namespace Persistence;public class SocialSyncDbContext : AuditableDbContext
+public class SocialSyncDbContext : AuditableDbContext
 {
     public SocialSyncDbContext(DbContextOptions<SocialSyncDbContext> option) : base(option){}
 

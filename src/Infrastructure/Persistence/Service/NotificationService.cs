@@ -1,14 +1,4 @@
-﻿using Application.Contracts.Persistence;
-using Application.DTOs.Notification;
-using Microsoft.AspNetCore.SignalR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Persistence.Service
+﻿namespace Persistence.Service
 {
     public class NotificationService : INotificationService
     {
