@@ -1,3 +1,4 @@
+using Application.Contracts.Identity;
 using Application.Contracts.Persistence;
 using Application.Features.Follows.Requests.Commands;
 using Application.Responses;
@@ -7,11 +8,13 @@ namespace Application.Features.Follows.Handlers.Commands;
 
 public class CreateFollowingRequestHandler : IRequestHandler<CreateFollowingRequest, BaseCommandResponse> {
     private readonly IUnitOfWork _unitOfWork;
+    
     public CreateFollowingRequestHandler(IUnitOfWork unitOfWork) {
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<BaseCommandResponse> Handle(CreateFollowingRequest request, CancellationToken cancellationToken) {
+    public async Task<BaseCommandResponse> Handle(CreateFollowingRequest request, CancellationToken cancellationToken)
+    {
         var response = await _unitOfWork.FollowsRepository.Follow(request.UserId, request.FollowsId);
         
         if (response == null)

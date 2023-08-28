@@ -21,14 +21,15 @@ public static class PersistenceServiceRegistration
 
         services.AddScoped<IFollowsRepository, FollowsRepository>();
         services.AddScoped<INotificationRepository, NotificationRepository>();
-        services.AddScoped<INotificationService, NotificationService>();
-        services.AddScoped<IUserConnectionMapRepository, UserConnectionMapRepository>();
-        services.AddScoped<INotificationRepository, NotificationRepository>();
-        services.AddScoped<IUserConnectionMapRepository, UserConnectionMapRepository>();
-        services.AddSignalRCore();
+
+
+        services.AddScoped<IPostRepository, PostRepository>();
+
+        services.AddScoped<ICommentRepository, CommentRepository>();
 
         services.AddScoped<ILikesRepository, LikesRepository>();
         services.AddScoped<IUnlikesRepository, UnlikesRepository>();
+
         return services;
     } 
 }

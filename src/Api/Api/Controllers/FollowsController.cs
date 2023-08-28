@@ -1,7 +1,9 @@
 ﻿using System.Security.Claims;
 using Application.Constants;
+using Application.Contracts.Identity;
 using Application.DTOs.Follows;
 using Application.DTOs.Notification;
+using Application.Exceptions;
 using Application.Features.Follows.Requests.Commands;
 using Application.Features.Follows.Requests.Queries;
 using Application.Features.Notifications.Requests;
@@ -16,16 +18,18 @@ namespace Api.Controllers;
 
 [Route("api/user/[controller]")]
 [ApiController]
-[Authorize]
+// [Authorize]
 public class FollowsController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly IHttpContextAccessor _contextAccessor;
+    private readonly IUserService _userService;
 
-    public FollowsController(IMediator mediator, IHttpContextAccessor contextAccessor)
+    public FollowsController(IMediator mediator, IHttpContextAccessor contextAccessor, IUserService userService)
     {
         _contextAccessor = contextAccessor;
         _mediator = mediator;
+        _userService = userService;
     }
 
     [HttpGet("followers")]
@@ -56,7 +60,10 @@ public class FollowsController : ControllerBase
         if (id == null) throw new UnauthorizedAccessException("user authentication needed");
 
 
+        var validateUserExists = await _userService.Exists(follows.FollowsId.ToString());
 
+        if (!validateUserExists) throw new NotFoundException("user", follows.FollowsId);
+        
         var response = await _mediator.Send(new CreateFollowingRequest(new Guid(id), follows.FollowsId));
 
         if (response.Success == true) {

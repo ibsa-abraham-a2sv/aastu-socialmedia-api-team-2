@@ -6,10 +6,15 @@ namespace Persistence.Repository;
 public class UnitOfWork : IUnitOfWork
 {
     private readonly SocialSyncDbContext _dbContext;
+
+    private CommentRepository? _commentRepository;
     private FollowsRepository? _followsRepository;
     private LikesRepository? _likesRepository;
     private UnlikesRepository? _unlikesRepository;
     private NotificationRepository? _notificationRepository;
+
+private PostRepository? _postRepository;
+
 
     public UnitOfWork(SocialSyncDbContext dbContext)
     {
@@ -22,6 +27,13 @@ public class UnitOfWork : IUnitOfWork
         GC.SuppressFinalize(this);
     }
 
+
+       public IPostRepository PostRepository =>
+        _postRepository ??= new PostRepository(_dbContext);
+
+    public ICommentRepository CommentRepository => 
+            _commentRepository ??= new CommentRepository(_dbContext);
+    
     public IFollowsRepository FollowsRepository =>
         _followsRepository ??= new FollowsRepository(_dbContext);
 
@@ -34,6 +46,7 @@ public class UnitOfWork : IUnitOfWork
 
     public INotificationRepository NotificationRepository =>
         _notificationRepository ??= new NotificationRepository(_dbContext);
+
 
     public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {

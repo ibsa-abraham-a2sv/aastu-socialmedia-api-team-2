@@ -14,4 +14,5 @@ public interface IUserService
     
     public Task UploadProfilePicture(string userId, byte[] picture);
     public Task<byte[]> GetProfilePicture(string userId);
+    public Task<bool> Exists(string userId);
 }
