@@ -42,13 +42,13 @@ namespace UnitTests.Comments.Handlers.Queries
             var createCommentDto = new CreateCommentDto
             {
                 PostId = Guid.NewGuid(),
-                UserId = Guid.NewGuid(),
                 Content = "Test Comment"
             };
 
             var command = new CreateCommentCommand
             {
-                CreateCommentDto = createCommentDto
+                CreateCommentDto = createCommentDto,
+                UserId = Guid.NewGuid()
             };
 
             var handler = new CreateCommentCommandHandler(_mockUnitOfWork.Object, _mapper);
@@ -80,13 +80,13 @@ namespace UnitTests.Comments.Handlers.Queries
             var createCommentDto = new CreateCommentDto
             {
                 PostId = Guid.NewGuid(),
-                UserId = Guid.NewGuid(),
                 Content = ""
             };
 
             var command = new CreateCommentCommand
             {
-                CreateCommentDto = createCommentDto
+                CreateCommentDto = createCommentDto,
+                UserId = Guid.NewGuid()
             };
 
             var handler = new CreateCommentCommandHandler(_mockUnitOfWork.Object, _mapper);

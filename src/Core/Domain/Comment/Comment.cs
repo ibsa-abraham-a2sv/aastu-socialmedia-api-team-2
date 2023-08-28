@@ -10,6 +10,7 @@ namespace Domain.Comment
     {
         public Guid PostId { get; set; }
         public Guid UserId { get; set; }
+        // public Post
         public required string Content { get; set; }
     }
 }

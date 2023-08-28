@@ -37,6 +37,9 @@ namespace Application.Features.Comments.Handlers.Commands
             if(comment is null)
                 throw new NotFoundException(nameof(comment), request.UpdateCommentDto.Id);
             
+            if (comment.UserId != request.RequestingUserId)
+                throw new UnauthorizedAccessException("User is not authorized.");
+            
             _mapper.Map(request.UpdateCommentDto, comment);
 
             await _unitOfWork.CommentRepository.Update(comment);

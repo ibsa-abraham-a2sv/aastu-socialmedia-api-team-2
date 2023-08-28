@@ -27,6 +27,9 @@ namespace Application.Features.Comments.Handlers.Commands
             if (comment == null)
                 throw new NotFoundException(nameof(comment), request.Id);
 
+            if (comment.UserId != request.RequestingUserId)
+                throw new UnauthorizedAccessException("User is not authorized.");
+
             await _unitOfWork.CommentRepository.Delete(comment);
             await _unitOfWork.SaveChangesAsync();
 
