@@ -12,8 +12,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(SocialSyncDbContext))]
-    [Migration("20230822121009_add_likes_unlikes")]
-    partial class add_likes_unlikes
+    [Migration("20230825071012_Creating Comment")]
+    partial class CreatingComment
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,6 +71,33 @@ namespace Persistence.Migrations
                     b.ToTable("Likes");
                 });
 
+            modelBuilder.Entity("Domain.Notification.Notification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("Domain.Unlikes.Unlikes", b =>
                 {
                     b.Property<Guid>("Id")
@@ -92,6 +119,24 @@ namespace Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Unlikes");
+                });
+
+            modelBuilder.Entity("Domain.UserConnectionIdMap.UserConnectionMapping", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ConnectionId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserConnectionMapping");
                 });
 #pragma warning restore 612, 618
         }

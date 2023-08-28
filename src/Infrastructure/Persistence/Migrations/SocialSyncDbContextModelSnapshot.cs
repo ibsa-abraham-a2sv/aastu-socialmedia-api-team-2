@@ -95,11 +95,13 @@ namespace Persistence.Migrations
                     b.ToTable("Likes");
                 });
 
+
             modelBuilder.Entity("Domain.Post.Post", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -115,6 +117,7 @@ namespace Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
 
                     b.ToTable("Posts");
                 });
@@ -140,6 +143,24 @@ namespace Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Unlikes");
+                });
+
+            modelBuilder.Entity("Domain.UserConnectionIdMap.UserConnectionMapping", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ConnectionId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserConnectionMapping");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,8 +1,12 @@
+using Api;
 using Api.Middleware;
 using Application;
 using Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.OpenApi.Models;
 using Persistence;
+using Persistence.Repository;
+using Persistence.Service;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,8 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureApplicationServices();
 builder.Services.ConfigurePersistenceServices(builder.Configuration);
 builder.Services.ConfigureIdentityServices(builder.Configuration);
+builder.Services.AddSignalR();
 builder.Services.AddHttpContextAccessor();
-
 //add swagger documentation
 AddSwaggerDoc(builder.Services);
 
@@ -51,8 +55,15 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+app.MapPost("broadcast", async (string message, IHubContext<NotificationHub, INotificationClient> context) =>
+{
+    await context.Clients.All.ReceiveMessage(message);
+    return Results.NoContent();
+});
 
+app.MapHub<NotificationHub>("notification-hub");
+
+app.Run();
 
 
 void AddSwaggerDoc(IServiceCollection services)
