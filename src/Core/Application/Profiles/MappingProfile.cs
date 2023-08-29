@@ -4,6 +4,8 @@ using Domain.Comment;
 using Application.DTOs.Follows;
 using Application.DTOs.Likes;
 using Application.DTOs.Unlikes;
+using Application.DTOs.Notification;
+using Domain.Notification;
 using Domain.Follows;
 using Domain.Likes;
 using Domain.Unlikes;
@@ -32,6 +34,13 @@ public class MappingProfile : Profile
         CreateMap<Follows, FollowsDto>().ReverseMap();
 
         CreateMap<Follows, FollowsReturnDto>().ReverseMap();
+
+       
+        #region Notification
+        CreateMap<Notification, NotificationDto>().ReverseMap();
+        CreateMap<Notification, CreateNotificationDto>().ReverseMap();
+        #endregion Notification
+
          CreateMap<Post, PostDto>()
                 
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
