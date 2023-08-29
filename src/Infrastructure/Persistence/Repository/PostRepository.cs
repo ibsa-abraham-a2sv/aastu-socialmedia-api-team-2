@@ -1,7 +1,5 @@
 using Application.Contracts.Persistence;
-using Application.DTOs.Post;
 using Domain.Post;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repository;
@@ -19,7 +17,7 @@ public class PostRepository : GenericRepository<Post>, IPostRepository
     public async Task<Post> GetPost(Guid postId)
     {
         var results = await _dbContext.Posts.Where(post => post.Id == postId).FirstOrDefaultAsync();
-        return results;
+        return results!;
     }
 
     public async Task<List<Post>> GetPosts(int pageIndex = 1, int pageSize = 10)

@@ -1,13 +1,15 @@
 using System.Security.Claims;
 using Application.Constants;
 using Application.Contracts.Identity;
+using Application.DTOs.Notification;
 using Application.DTOs.Post;
+using Application.Features.Follows.Requests.Queries;
+using Application.Features.Notifications.Requests;
 using Application.Features.Post.Requests.Command;
 using Application.Features.Post.Requests.Queries;
 using Application.Responses;
 using Domain.Post;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -18,7 +20,9 @@ namespace Api.Controllers;
 public class PostController : ControllerBase
 {
     private readonly IMediator _mediator;
+
      private readonly IHttpContextAccessor _contextAccessor;
+
     private readonly IUserService _userService;
 
     public PostController(IMediator mediator, IHttpContextAccessor contextAccessor, IUserService userService)
@@ -75,20 +79,32 @@ public async Task<ActionResult<PostDto>> GetPostsByUserId(int pageIndex = 1, int
 public async Task<ActionResult<BaseCommandResponse>> CreatePost(string content)
 {
     var id = _contextAccessor.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
-
-        
-        if (id == null) throw new UnauthorizedAccessException("user authentication needed");
+    
+    if (id == null) throw new UnauthorizedAccessException("user authentication needed");
         
     var request = new CreatePostRequest(new PostDto{
         UserId= new Guid(id),   
         Content= content
     });
 
+
     var response = await _mediator.Send(request);
 
     if (response.Success)
     {
-        return Ok(response);
+            var user = await _userService.GetUserById(id);
+            var followers = await _mediator.Send(new GetFollowersRequest(new Guid(id)));
+            var notificationDto = new CreateNotificationDto();
+            foreach (var follower in followers)
+            {
+                notificationDto.UserId = follower.UserId;
+                notificationDto.Message = $"{user.UserName} Posted recently";
+                notificationDto.IsRead = false;
+
+                var command = new CreateNotificationCommand { CreateNotificationDto = notificationDto };
+                var res = await _mediator.Send(command);
+            }
+            return Ok(response);
     }
 
     return BadRequest(response);

@@ -97,7 +97,7 @@ mockRepo.Setup(r => r.Delete(It.IsAny<Domain.Post.Post>()))
         mockRepo.Setup(r => r.GetAll()).ReturnsAsync(postList);
 
        
-        mockRepo.Setup(r => r.GetPost(It.IsAny<Guid>())).ReturnsAsync((Guid postId) =>
+        mockRepo.Setup(r => r.GetPost(It.IsAny<Guid>()))!.ReturnsAsync((Guid postId) =>
         {
             var response = postList.FirstOrDefault(u => u.Id == postId);
             return response;

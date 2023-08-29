@@ -1,7 +1,4 @@
 using Application.Contracts.Persistence;
-using Application.DTOs.Post;
-using Application.Features.Post.Handlers.Command;
-using Application.Features.Post.Requests.Command;
 using Application.Features.Post.Handlers.Queries;
 using Application.Features.Post.Requests.Queries;
 using Application.Profiles;
@@ -10,7 +7,7 @@ using Moq;
 using Shouldly;
 using UnitTests.Mocks;
 
-namespace UnitTests.Post.Commands;
+namespace UnitTests.Post.Queries;
 
 public class GetPostRequestHandlerTest
 {

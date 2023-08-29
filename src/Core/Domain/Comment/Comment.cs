@@ -8,9 +8,10 @@ namespace Domain.Comment
 {
     public class Comment : EntityBase
     {
-        public Guid PostId { get; set; }
         public Guid UserId { get; set; }
-        // public Post
         public required string Content { get; set; }
+        
+        public Domain.Post.Post Post { get; set; }
+        public Guid PostId { get; set; }
     }
 }
