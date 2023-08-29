@@ -8,30 +8,37 @@ using Application.DTOs.Post.Validators;
 
 namespace Application.Features.Post.Handlers.Command;
 
-public class CreatePostRequestHandler : IRequestHandler<CreatePostRequest, BaseCommandResponse> {
+public class CreatePostRequestHandler : IRequestHandler<CreatePostRequest, BaseCommandResponse>
+{
     private readonly IUnitOfWork _unitOfWork;
-     private readonly IMapper _mapper;
-    public CreatePostRequestHandler(IUnitOfWork unitOfWork, IMapper mapper) {
+    private readonly IMapper _mapper;
+    public CreatePostRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    {
         _unitOfWork = unitOfWork;
-           _mapper = mapper;
-           
+        _mapper = mapper;
+
     }
 
-    public async Task<BaseCommandResponse> Handle(CreatePostRequest request, CancellationToken cancellationToken) {
-      
+    public async Task<BaseCommandResponse> Handle(CreatePostRequest request, CancellationToken cancellationToken)
+    {
+
+
+        var validator = new PostDtoValidator(_unitOfWork);
+        var validationResult = await validator.ValidateAsync(request.postDto);
+
+
+        if (validationResult.IsValid == false)
+        {
+            return new BaseCommandResponse() { Success = false, Message = validationResult.Errors.Select(q => q.ErrorMessage).ToList()[0] };
+        }
+
+
         var post = _mapper.Map<Domain.Post.Post>(request.postDto);
-        var response =  await _unitOfWork.PostRepository.CreatePost(post);
-         var validator = new PostDtoValidator(_unitOfWork);
-            var validationResult = await validator.ValidateAsync(request.postDto);
-          
-             if (validationResult.IsValid == false)
-            {
-               return new BaseCommandResponse(){Id = response, Success = false, Message = validationResult.Errors.Select(q => q.ErrorMessage).ToList()[0]}; 
-            }
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
-        
+
+        var response = await _unitOfWork.PostRepository.Add(post);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new BaseCommandResponse(){Id = response, Success = true, Message = "Successfully created"}; 
+
+        return new BaseCommandResponse() { Id = response.Id, Success = true, Message = "Successfully created" };
     }
 }

@@ -10,11 +10,11 @@ using UnitTests.Mocks;
 
 namespace UnitTests.Post.Commands;
 
-public class UpdatePostRequestHandlerTest
+public class DeletePostRequestHandlerTest
 {
     private readonly IMapper _mapper;
     private readonly Mock<IUnitOfWork> _mockRepo;
-    public UpdatePostRequestHandlerTest()
+    public DeletePostRequestHandlerTest()
     {
         _mockRepo = MockUnitOfWork.GetUnitOfWork();
 
@@ -28,20 +28,19 @@ public class UpdatePostRequestHandlerTest
     }
 
     [Fact]
-    public async Task UpdatePostTest()
+    public async Task DeletePostTest()
     {
-        var handler = new UpdatePostRequestHandler(_mockRepo.Object, _mapper);
-        var postId = (await _mockRepo.Object.PostRepository.GetAll())[0].Id;
-        var userId = (await _mockRepo.Object.PostRepository.GetAll())[0].UserId;
+        var handler = new DeletePostRequestHandler(_mockRepo.Object);
      
-        UpdatePostDto updatedPost = new UpdatePostDto{
-            Id = postId,
-            Content = "Updated Test"
-        };
-    var result = await handler.Handle(new UpdatePostRequest(updatedPost), CancellationToken.None);
+        var userId = (await _mockRepo.Object.PostRepository.GetAll())[0].UserId;
+         var postId = (await _mockRepo.Object.PostRepository.GetAll())[0].Id;
+        
+    var result = await handler.Handle(new DeletePostRequest(userId, postId), CancellationToken.None);
     result.ShouldBeOfType<Application.Responses.BaseCommandResponse>();
     result.Success.ShouldBeTrue();
-    result.Message.ShouldBe("Successfully updated the post");
+    result.Message.ShouldBe("Successfully deleted the post");
+  
+        
         
     }
 }

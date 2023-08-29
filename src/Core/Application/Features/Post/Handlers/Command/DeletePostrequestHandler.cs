@@ -7,7 +7,7 @@ using MediatR;
 
 namespace Application.Features.Post.Handlers.Command
 {
-    internal sealed class DeletePostRequestHandler : IRequestHandler<DeletePostRequest, BaseCommandResponse>
+    public class DeletePostRequestHandler : IRequestHandler<DeletePostRequest, BaseCommandResponse>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -23,7 +23,7 @@ namespace Application.Features.Post.Handlers.Command
 
             if (existingPost != null && existingPost.UserId == request.userId)
             {
-                await _unitOfWork.PostRepository.DeletePost(request.userId,request.postId);
+                await _unitOfWork.PostRepository.Delete(existingPost);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
                 
                 return new BaseCommandResponse
