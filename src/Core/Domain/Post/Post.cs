@@ -12,6 +12,7 @@ namespace Domain.Post;
 
         public Guid UserId { get; set; }
         public string Content { get; set; } = string.Empty;
+
         public ICollection<Domain.Comment.Comment> Comments { get; set; }
 
 
