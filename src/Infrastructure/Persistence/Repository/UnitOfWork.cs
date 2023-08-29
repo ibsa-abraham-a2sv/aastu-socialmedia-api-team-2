@@ -13,6 +13,7 @@ public class UnitOfWork : IUnitOfWork
     private UnlikesRepository? _unlikesRepository;
 
 private PostRepository? _postRepository;
+    private HashtagRepository? _hashtagRepository;
 
 
     public UnitOfWork(SocialSyncDbContext dbContext)
@@ -42,6 +43,9 @@ private PostRepository? _postRepository;
 
     public IUnlikesRepository UnlikesRepository =>
         _unlikesRepository ??= new UnlikesRepository(_dbContext);
+
+    public IHashtagRepository HashtagRepository =>
+        _hashtagRepository ??= new HashtagRepository(_dbContext);
 
 
     public async Task SaveChangesAsync(CancellationToken cancellationToken = default)

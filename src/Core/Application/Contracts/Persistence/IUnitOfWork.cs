@@ -7,6 +7,7 @@ public interface IUnitOfWork : IDisposable {
     ICommentRepository CommentRepository { get; }
     ILikesRepository LikesRepository { get; }
     IUnlikesRepository UnlikesRepository { get; }
+    IHashtagRepository HashtagRepository { get; }
   
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
   

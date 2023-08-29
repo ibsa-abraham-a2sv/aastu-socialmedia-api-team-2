@@ -8,7 +8,7 @@ namespace Domain.Hashtag
 {
     public class Hashtag : EntityBase
     {
-        public required string Name { get; set; }
+        public required string Tag { get; set; }
         
         public ICollection<PostHashtag>? PostHashtags { get; set; }
     }
