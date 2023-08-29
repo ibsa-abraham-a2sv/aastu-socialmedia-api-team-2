@@ -67,17 +67,16 @@ public class FollowsController : ControllerBase
         var response = await _mediator.Send(new CreateFollowingRequest(new Guid(id), follows.FollowsId));
 
         if (response.Success == true) {
-            var Gid = new Guid(id);
+            var user = await _userService.GetUserById(id);
+            var Gid = follows.FollowsId;
             var notificationDto = new CreateNotificationDto();
             notificationDto.UserId = Gid;
-            notificationDto.Message = $" followed you recently";
+            notificationDto.Message = $"{user.UserName} followed you recently";
             notificationDto.IsRead = false;
 
             var command = new CreateNotificationCommand { CreateNotificationDto = notificationDto };
             var res = await _mediator.Send(command);
 
-            //var notificationCommand = new CreateNotificationCommand { CreateNotificationDto = notificationDto };
-            //await _mediator.Send(notificationCommand);
         }
         return Ok(response);
     }

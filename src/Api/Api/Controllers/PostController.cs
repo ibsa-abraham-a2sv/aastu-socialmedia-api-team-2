@@ -1,11 +1,19 @@
+using Application.Constants;
+using Application.Contracts.Identity;
+using Application.DTOs.Notification;
 using Application.DTOs.Post;
+using Application.Features.Follows.Requests.Queries;
+using Application.Features.Notifications.Requests;
 using Application.Features.Post.Requests.Command;
 using Application.Features.Post.Requests.Queries;
 using Application.Responses;
+using Domain.Follows;
+using Domain.Notification;
 using Domain.Post;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Api.Controllers;
 
@@ -15,8 +23,15 @@ namespace Api.Controllers;
 public class PostController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IHttpContextAccessor _contextAccessor;
+    private readonly IUserService _userService;
 
-    public PostController(IMediator mediator) => _mediator = mediator;
+    public PostController(IMediator mediator, IHttpContextAccessor contextAccessor, IUserService userService)
+    {
+        _contextAccessor = contextAccessor;
+        _mediator = mediator;
+        _userService = userService;
+    }
 
     [HttpGet("posts/{pageIndex}/{pageSize}")]
     public async Task<ActionResult<List<Post>>> GetPosts(int pageIndex = 1, int pageSize = 10)
@@ -55,13 +70,28 @@ public async Task<ActionResult<Post>> GetPostsByUserId(Guid userId, int pageInde
 [HttpPost("posts")]
 public async Task<ActionResult<BaseCommandResponse>> CreatePost(PostDto postDto)
 {
+    var id = _contextAccessor.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
+    if (id == null) throw new UnauthorizedAccessException("user authentication needed");
+
     var request = new CreatePostRequest(postDto);
 
     var response = await _mediator.Send(request);
 
     if (response.Success)
     {
-        return Ok(response);
+            var user = await _userService.GetUserById(id);
+            var followers = await _mediator.Send(new GetFollowersRequest(new Guid(id)));
+            var notificationDto = new CreateNotificationDto();
+            foreach (var follower in followers)
+            {
+                notificationDto.UserId = follower.UserId;
+                notificationDto.Message = $"{user.UserName} Posted recently";
+                notificationDto.IsRead = false;
+
+                var command = new CreateNotificationCommand { CreateNotificationDto = notificationDto };
+                var res = await _mediator.Send(command);
+            }
+            return Ok(response);
     }
 
     return BadRequest(response);

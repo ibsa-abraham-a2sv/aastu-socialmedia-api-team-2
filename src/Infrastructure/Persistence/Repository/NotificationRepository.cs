@@ -28,11 +28,6 @@ namespace Persistence.Repository
         {
             var notifications = await _dbContext.Notifications.Where(n => n.UserId == userId).ToListAsync();
 
-            foreach (var notification in notifications)
-            {
-                notification.IsRead = true;
-            }
-
             await _dbContext.SaveChangesAsync();
             return notifications;
 
