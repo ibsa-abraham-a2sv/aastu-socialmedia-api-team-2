@@ -1,5 +1,4 @@
-﻿﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -24,6 +23,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity", "src\Infrastructure\Identity\Identity.csproj", "{7234669E-AC8A-47A0-A68F-AC8D4EC72DCB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "tests\UnitTests\UnitTests.csproj", "{67AFEA52-2AC5-427B-9868-ADB0EBF435DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\Infrastructure\Infrastructure\Infrastructure.csproj", "{A9489BEF-036F-465F-8D92-BD73446C4BCE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,6 +59,10 @@ Global
 		{67AFEA52-2AC5-427B-9868-ADB0EBF435DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67AFEA52-2AC5-427B-9868-ADB0EBF435DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67AFEA52-2AC5-427B-9868-ADB0EBF435DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9489BEF-036F-465F-8D92-BD73446C4BCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9489BEF-036F-465F-8D92-BD73446C4BCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9489BEF-036F-465F-8D92-BD73446C4BCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9489BEF-036F-465F-8D92-BD73446C4BCE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F9E8ED3B-74B5-4810-8AC9-7CB4676B1A82} = {C9FC965B-AB55-45E8-913E-E2E323277108}
@@ -69,5 +74,6 @@ Global
 		{514945C6-D07F-4838-83FF-B105EE0FE262} = {F7A2F483-9119-4469-8142-D9020B97F37C}
 		{7234669E-AC8A-47A0-A68F-AC8D4EC72DCB} = {556D4B02-E35C-4E8C-8C21-35491E665132}
 		{67AFEA52-2AC5-427B-9868-ADB0EBF435DD} = {14C3A5CF-E581-4AD5-ACB5-6E7D81A8040F}
+		{A9489BEF-036F-465F-8D92-BD73446C4BCE} = {556D4B02-E35C-4E8C-8C21-35491E665132}
 	EndGlobalSection
 EndGlobal

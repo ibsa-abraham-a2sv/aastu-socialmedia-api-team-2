@@ -1,8 +1,11 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
+using Application.Contracts.Email;
 using Application.Contracts.Identity;
 using Application.Exceptions;
+using Application.Models.Email;
 using Application.Models.Identity;
 using Identity.Models;
 using Microsoft.AspNetCore.Http;
@@ -17,14 +20,17 @@ namespace Identity.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly JwtSettings _jwtSettings;
+        private readonly IEmailSender _emailSender;
 
         public AuthService(UserManager<ApplicationUser> userManager,
             IOptions<JwtSettings> jwtSettings,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager,
+            IEmailSender emailSender)
         {
             _userManager = userManager;
             _jwtSettings = jwtSettings.Value;
             _signInManager = signInManager;
+            _emailSender = emailSender;
         }
 
         public async Task<AuthResponse> Login(AuthRequest request)
@@ -82,14 +88,23 @@ namespace Identity.Services
                 UserName = request.UserName,
                 BirthDate = request.BirthDate,
                 PasswordComfirmation = request.PasswordComfirmation,
-                EmailConfirmed = true
             };
+            
             
             var result = await _userManager.CreateAsync(user, request.Password);
             
 
             if (result.Succeeded)
             {
+                var mailMessage = new EmailMessage()
+                {
+                    To = request.Email,
+                    Subject = "Welcome to the Social Network",
+                    Body = "Welcome to the Social Network",
+                };
+             
+                await _emailSender.SendEmail(mailMessage);
+                
                 return new RegistrationResponse() { UserId = user.Id };
             }
             else
