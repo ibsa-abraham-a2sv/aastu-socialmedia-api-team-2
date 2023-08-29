@@ -17,26 +17,6 @@ namespace Persistence.Repository
             _dbContext = dbContext;
         }
 
-        public async Task AddHashtagToPost(Guid postId, Guid hashtagId)
-        {
-            var post = await _dbContext.Posts.FirstOrDefaultAsync(p => p.Id == postId);
-            var hashtag = await _dbContext.Hashtags.FirstOrDefaultAsync(h => h.Id == hashtagId);
-
-            if (post != null && hashtag != null)
-            {
-                var postHashtag = new PostHashtag
-                {
-                    PostId = postId,
-                    HashtagId = hashtagId,
-                    Hashtag = hashtag,
-                    Post = post
-                };
-
-                post.PostHashtags.Add(postHashtag);
-                _dbContext.SaveChanges();
-            }
-        }
-
         public async Task<Hashtag?> GetByTag(string tag)
         {
             return await _dbContext.Hashtags.FirstOrDefaultAsync(h => h.Tag == tag);
@@ -54,23 +34,6 @@ namespace Persistence.Repository
             return await _dbContext.Hashtags.Where(hashtag => hashtag.PostHashtags.Any(ph => ph.PostId == postId)).OrderByDescending(h => h.CreatedAt)
             .Skip((pageIndex - 1) * pageSize)
             .Take(pageSize).ToListAsync();
-        }
-
-        public async Task RemoveHashtagFromPost(Guid postId, Guid hashtagId)
-        {
-            var post = await _dbContext.Posts.FirstOrDefaultAsync(p => p.Id == postId);
-            var hashtag = await _dbContext.Hashtags.FirstOrDefaultAsync(h => h.Id == hashtagId);
-
-            if (post != null && hashtag != null)
-            {
-                var hashtagPost = post.PostHashtags.FirstOrDefault(hp => hp.HashtagId == hashtagId);
-
-                if (hashtagPost != null)
-                {
-                    post.PostHashtags.Remove(hashtagPost);
-                    _dbContext.SaveChanges();
-                }
-            }
         }
     }
 }

@@ -5,6 +5,8 @@ using Domain.Post;
 using AutoMapper;
 using MediatR;
 using Application.DTOs.Post.Validators;
+using System.Text.RegularExpressions;
+using Domain.Hashtag;
 
 namespace Application.Features.Post.Handlers.Command;
 
@@ -34,11 +36,36 @@ public class CreatePostRequestHandler : IRequestHandler<CreatePostRequest, BaseC
 
 
         var post = _mapper.Map<Domain.Post.Post>(request.postDto);
+        
+        post = await _unitOfWork.PostRepository.Add(post);
 
-        var response = await _unitOfWork.PostRepository.Add(post);
+        var regex = new Regex(@"#\w+");
+        var hashtagMatches = regex.Matches(post.Content);
+        foreach (Match match in hashtagMatches)
+        {
+            string tag = match.Value.TrimStart('#');
+
+            var existingHashtag = await _unitOfWork.HashtagRepository.GetByTag(tag);
+            if (existingHashtag == null)
+            {
+                existingHashtag = await _unitOfWork.HashtagRepository.Add(new Hashtag { Tag = tag });
+            }
+
+            var postHashtag = new PostHashtag
+            {
+                PostId = post.Id,
+                HashtagId = existingHashtag.Id,
+                Hashtag = existingHashtag,
+                Post = post
+            };
+
+            post.PostHashtags.Add(postHashtag);
+            existingHashtag.PostHashtags.Add(postHashtag);
+        }
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
 
-        return new BaseCommandResponse() { Id = response.Id, Success = true, Message = "Successfully created" };
+        return new BaseCommandResponse() { Id = post.Id, Success = true, Message = "Successfully created" };
     }
 }

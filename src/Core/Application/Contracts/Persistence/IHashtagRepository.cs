@@ -11,8 +11,6 @@ namespace Application.Contracts.Persistence
     {
         Task<Hashtag?> GetByTag(string tag);
         Task<IReadOnlyList<Hashtag>> GetHashtagsByPostId(Guid postId, int pageIndex, int pageSize);
-        Task AddHashtagToPost(Guid postId, Guid hashtagId);
-        Task RemoveHashtagFromPost(Guid postId, Guid hashtagId);
         Task<IReadOnlyList<Post>> GetPostsByHashtag(string tag, int pageIndex, int pageSize);
     }
 }

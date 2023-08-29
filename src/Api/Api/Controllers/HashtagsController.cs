@@ -8,20 +8,20 @@ using Application.Features.Hashtags.Requests.Queries;
 using Application.Features.Post.Requests.Queries;
 using Domain.Post;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
     [ApiController]
     [Route("api")]
+    [Authorize]
     public class HashtagsController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public HashtagsController(IMediator mediator, IHttpContextAccessor httpContextAccessor)
+        public HashtagsController(IMediator mediator)
         {
-            _httpContextAccessor = httpContextAccessor;
             _mediator = mediator;
         }
 

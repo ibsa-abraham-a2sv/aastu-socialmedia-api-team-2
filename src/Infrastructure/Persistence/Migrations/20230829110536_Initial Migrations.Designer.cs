@@ -12,8 +12,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(SocialSyncDbContext))]
-    [Migration("20230829071012_Creating Hashtags")]
-    partial class CreatingHashtags
+    [Migration("20230829110536_Initial Migrations")]
+    partial class InitialMigrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,6 +48,8 @@ namespace Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PostId");
 
                     b.ToTable("Comments");
                 });
@@ -146,6 +148,33 @@ namespace Persistence.Migrations
                     b.ToTable("Likes");
                 });
 
+            modelBuilder.Entity("Domain.Notification.Notification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("Domain.Post.Post", b =>
                 {
                     b.Property<Guid>("Id")
@@ -193,6 +222,17 @@ namespace Persistence.Migrations
                     b.ToTable("Unlikes");
                 });
 
+            modelBuilder.Entity("Domain.Comment.Comment", b =>
+                {
+                    b.HasOne("Domain.Post.Post", "Post")
+                        .WithMany("Comments")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+                });
+
             modelBuilder.Entity("Domain.Hashtag.PostHashtag", b =>
                 {
                     b.HasOne("Domain.Hashtag.Hashtag", "Hashtag")
@@ -219,6 +259,8 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Post.Post", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("PostHashtags");
                 });
 #pragma warning restore 612, 618
