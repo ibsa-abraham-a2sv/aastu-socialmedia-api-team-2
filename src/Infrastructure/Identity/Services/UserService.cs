@@ -124,10 +124,10 @@ public class UserService : IUserService
     {
         try
         {
-            var user = await GetUserById(userId);
+            await GetUserById(userId);
 
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
             return false;
         }

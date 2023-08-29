@@ -9,6 +9,6 @@ namespace Application.DTOs.UserConnectionIdMap
     public class CreateUserConnectionMappingDTO
     {
         public Guid UserId { get; set; }
-        public string ConnectionId { get; set; }
+        public string ConnectionId { get; set; } = string.Empty;
     }
 }

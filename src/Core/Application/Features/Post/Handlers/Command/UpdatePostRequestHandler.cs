@@ -27,7 +27,7 @@ namespace Application.Features.Post.Handlers.Command
 
             var existingPost = await _unitOfWork.PostRepository.GetPost(request.postUpdateDto.Id);
               var validator = new UpdatePostDtoValidator(_unitOfWork);
-            var validationResult = await validator.ValidateAsync(request.postUpdateDto);
+            var validationResult = await validator.ValidateAsync(request.postUpdateDto, cancellationToken);
 
              if (validationResult.IsValid == false)
             {
@@ -37,7 +37,7 @@ namespace Application.Features.Post.Handlers.Command
             {
                 existingPost.Content = request.postUpdateDto.Content; 
 
-        _unitOfWork.PostRepository.Update(post);
+                await _unitOfWork.PostRepository.Update(post);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
                 
                 return new BaseCommandResponse

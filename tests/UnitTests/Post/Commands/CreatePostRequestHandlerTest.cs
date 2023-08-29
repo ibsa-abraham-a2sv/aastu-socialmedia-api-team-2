@@ -34,7 +34,7 @@ public class CreatePostRequestHandlerTest
      
         var userId = (await _mockRepo.Object.PostRepository.GetAll())[0].UserId;
         PostDto post = new PostDto{
-            Id = Guid.NewGuid(),
+            // Id = Guid.NewGuid(),
             UserId = userId,
             Content = "Test"
         };

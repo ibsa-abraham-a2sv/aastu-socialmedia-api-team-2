@@ -11,6 +11,6 @@ namespace Application.Features.Notifications.Requests
 {
     public class CreateNotificationCommand : IRequest<BaseCommandResponse>
     {
-        public CreateNotificationDto CreateNotificationDto { get; set; }
+        public CreateNotificationDto? CreateNotificationDto { get; set; }
     }
 }

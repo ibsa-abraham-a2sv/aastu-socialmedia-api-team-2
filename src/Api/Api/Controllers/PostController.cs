@@ -8,13 +8,9 @@ using Application.Features.Notifications.Requests;
 using Application.Features.Post.Requests.Command;
 using Application.Features.Post.Requests.Queries;
 using Application.Responses;
-using Domain.Follows;
-using Domain.Notification;
 using Domain.Post;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Api.Controllers;
 

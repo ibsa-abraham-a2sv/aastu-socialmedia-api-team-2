@@ -8,8 +8,8 @@ namespace Application.DTOs.Post
 {
     public class UpdatePostDto
     {
-        public Guid Id { get; set; } 
-        public string Content { get; set; }
+        public Guid Id { get; set; }
+        public string Content { get; set; } = string.Empty;
     }
 }
 
