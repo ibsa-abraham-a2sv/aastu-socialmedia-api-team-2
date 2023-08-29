@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Application.Contracts.Persistence;
 using Domain.Hashtag;
+using Domain.Post;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repository
@@ -36,9 +37,16 @@ namespace Persistence.Repository
             }
         }
 
-        public async Task<Hashtag> GetByTag(string tag)
+        public async Task<Hashtag?> GetByTag(string tag)
         {
             return await _dbContext.Hashtags.FirstOrDefaultAsync(h => h.Tag == tag);
+        }
+
+        public async Task<IReadOnlyList<Post>> GetPostsByHashtag(string tag, int pageIndex, int pageSize)
+        {
+            return await _dbContext.Posts.Where(post => post.PostHashtags.Any(ph => ph.Hashtag.Tag.Equals(tag))).OrderByDescending(p => p.CreatedAt)
+            .Skip((pageIndex - 1) * pageSize)
+            .Take(pageSize).ToListAsync();
         }
 
         public async Task<IReadOnlyList<Hashtag>> GetHashtagsByPostId(Guid postId, int pageIndex, int pageSize)

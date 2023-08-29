@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.DTOs.Hashtag;
+using Application.DTOs.Post;
 using Application.Features.Hashtags.Requests.Queries;
 using Application.Features.Post.Requests.Queries;
 using Domain.Post;
@@ -24,7 +26,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("posts/hashtag/{tag}/{pageIndex}/{pageSize}")]
-        public async Task<ActionResult<Post>> GetPostsByHashtag(string tag, int pageIndex = 1, int pageSize = 10)
+        public async Task<ActionResult<PostDto>> GetPostsByHashtag(string tag, int pageIndex = 1, int pageSize = 10)
         {
             if (pageIndex < 1 || pageSize < 1)
             {
@@ -36,7 +38,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("hashtags/post/{postId}/{pageIndex}/{pageSize}")]
-        public async Task<ActionResult<Post>> GetHashtagsByPostId(Guid postId, int pageIndex = 1, int pageSize = 10)
+        public async Task<ActionResult<HashtagDto>> GetHashtagsByPostId(Guid postId, int pageIndex = 1, int pageSize = 10)
         {
             if (pageIndex < 1 || pageSize < 1)
             {

@@ -10,9 +10,9 @@ namespace Domain.Hashtag
     public class PostHashtag : EntityBase
     {
         public Guid PostId { get; set; }
-        public Domain.Post.Post? Post { get; set; }
+        public required Domain.Post.Post Post { get; set; }
         
         public Guid HashtagId { get; set; }
-        public Hashtag? Hashtag { get; set; }
+        public required Hashtag Hashtag { get; set; }
     }
 }

@@ -19,7 +19,7 @@ public class PostController : ControllerBase
     public PostController(IMediator mediator) => _mediator = mediator;
 
     [HttpGet("posts/{pageIndex}/{pageSize}")]
-    public async Task<ActionResult<List<Post>>> GetPosts(int pageIndex = 1, int pageSize = 10)
+    public async Task<ActionResult<List<PostDto>>> GetPosts(int pageIndex = 1, int pageSize = 10)
     {
         if (pageIndex < 1 || pageSize < 1)
     {
@@ -29,7 +29,7 @@ public class PostController : ControllerBase
         return Ok(posts);
     }
 [HttpGet("posts/{postId}")]
-public async Task<ActionResult<Post>> GetPostById(Guid postId)
+public async Task<ActionResult<PostDto>> GetPostById(Guid postId)
 {
     var request = new GetPostRequest(postId);
     var post = await _mediator.Send(request);
@@ -42,7 +42,7 @@ public async Task<ActionResult<Post>> GetPostById(Guid postId)
     return Ok(post);
 }
 [HttpGet("posts/user/{userId}/{pageIndex}/{pageSize}")]
-public async Task<ActionResult<Post>> GetPostsByUserId(Guid userId, int pageIndex = 1, int pageSize = 10)
+public async Task<ActionResult<PostDto>> GetPostsByUserId(Guid userId, int pageIndex = 1, int pageSize = 10)
 {
     if (pageIndex < 1 || pageSize < 1)
     {
@@ -95,7 +95,7 @@ public async Task<ActionResult<BaseCommandResponse>> DeletePost(Guid userId, Gui
     return BadRequest(response);
 }
 [HttpGet("following/posts/{userId}")]
-public async Task<ActionResult<Post>> GetFollowingPosts(Guid userId)
+public async Task<ActionResult<PostDto>> GetFollowingPosts(Guid userId)
 {
     var request = new GetFollowingPostsRequest(userId);
     var posts = await _mediator.Send(request);

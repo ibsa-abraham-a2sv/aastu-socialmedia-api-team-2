@@ -10,6 +10,6 @@ namespace Domain.Hashtag
     {
         public required string Tag { get; set; }
         
-        public ICollection<PostHashtag>? PostHashtags { get; set; }
+        public ICollection<PostHashtag> PostHashtags { get; set; } = new List<PostHashtag>();
     }
 }

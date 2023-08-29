@@ -22,7 +22,7 @@ namespace Application.Features.Post.Handlers.Queries
         }
         public async Task<List<PostDto>> Handle(GetPostsByHashtagRequest request, CancellationToken cancellationToken)
         {
-            var posts = await _unitOfWork.PostRepository.GetPostsByHashtag(request.Tag, request.PageIndex, request.PageSize);
+            var posts = await _unitOfWork.HashtagRepository.GetPostsByHashtag(request.Tag, request.PageIndex, request.PageSize);
             return _mapper.Map<List<PostDto>>(posts);
         }
     }

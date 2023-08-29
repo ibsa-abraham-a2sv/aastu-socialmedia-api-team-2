@@ -14,6 +14,5 @@ public interface IPostRepository: IGenericRepository<Post>
     Task<Guid> CreatePost(Post post);
     Task<Guid> UpdatePost(Post post);
     Task DeletePost(Guid userId, Guid postId);
-    Task<IReadOnlyList<Post>> GetPostsByHashtag(string tag, int pageIndex, int pageSize);
 
 }
