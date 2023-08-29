@@ -36,7 +36,6 @@ public class UpdatePostRequestHandlerTest
      
         UpdatePostDto updatedPost = new UpdatePostDto{
             Id = postId,
-            UserId = userId,
             Content = "Updated Test"
         };
     var result = await handler.Handle(new UpdatePostRequest(updatedPost), CancellationToken.None);

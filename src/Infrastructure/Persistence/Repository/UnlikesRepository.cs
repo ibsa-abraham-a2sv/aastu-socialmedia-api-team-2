@@ -1,5 +1,4 @@
 ﻿using Application.Contracts.Persistence;
-using Domain.Likes;
 using Domain.Unlikes;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

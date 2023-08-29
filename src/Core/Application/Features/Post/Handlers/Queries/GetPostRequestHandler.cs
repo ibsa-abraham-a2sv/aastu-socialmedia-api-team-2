@@ -9,12 +9,11 @@ namespace Application.Features.Post.Handlers.Queries;
 public class GetPostRequestHandler : IRequestHandler<GetPostRequest, PostDto>
 {
     private readonly IUnitOfWork _unitOfWork;
-    public readonly IMapper _mapper;
-    public GetPostRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
-    {
-        _mapper = mapper;
+      private readonly IMapper _mapper;
+    
+    public GetPostRequestHandler(IUnitOfWork unitOfWork , IMapper mapper) {
         _unitOfWork = unitOfWork;
-        
+          _mapper = mapper;
     }
     public async Task<PostDto> Handle(GetPostRequest request, CancellationToken cancellationToken)
     {

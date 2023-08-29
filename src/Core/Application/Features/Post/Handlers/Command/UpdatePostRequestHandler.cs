@@ -27,22 +27,21 @@ namespace Application.Features.Post.Handlers.Command
 
             var existingPost = await _unitOfWork.PostRepository.GetPost(request.postUpdateDto.Id);
               var validator = new UpdatePostDtoValidator(_unitOfWork);
-            var validationResult = await validator.ValidateAsync(request.postUpdateDto);
+            var validationResult = await validator.ValidateAsync(request.postUpdateDto, cancellationToken);
 
              if (validationResult.IsValid == false)
             {
                return new BaseCommandResponse(){Id = existingPost.Id, Success = false, Message = validationResult.Errors.Select(q => q.ErrorMessage).ToList()[0]}; 
             }
-            if (existingPost != null && existingPost.UserId == request.postUpdateDto.UserId)
+            if (existingPost != null)
             {
                 existingPost.Content = request.postUpdateDto.Content; 
 
-          var response = await _unitOfWork.PostRepository.UpdatePost(post);
+                await _unitOfWork.PostRepository.Update(post);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
                 
                 return new BaseCommandResponse
                 {
-                    Id = response,
                     Success = true,
                     Message = "Successfully updated the post"
                 };

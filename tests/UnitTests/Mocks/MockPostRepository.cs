@@ -58,72 +58,46 @@ public static class MockPostRepository
             },
         };
 
-        // var likesList = new List<Domain.Likes.Likes>
-        // {
-        //     new Domain.Likes.Likes()
-        //     {
-        //         UserId = users[0].Item2,
-        //         CreatedAt = DateTime.UtcNow,
-        //         UpdatedAt = DateTime.UtcNow,
-        //         LikesId = posts[1].Item2
-        //     },
-        //     new Domain.Likes.Likes()
-        //     {
-        //         UserId = users[1].Item2,
-        //         CreatedAt = DateTime.UtcNow,
-        //         UpdatedAt = DateTime.UtcNow,
-        //         LikesId = posts[2].Item2
-        //     },
-        //     new Domain.Likes.Likes()
-        //     {
-        //         UserId = users[0].Item2,
-        //         CreatedAt = DateTime.UtcNow,
-        //         UpdatedAt = DateTime.UtcNow,
-        //         LikesId = posts[0].Item2
-        //     },
-        // };
 
         var mockRepo = new Mock<IPostRepository>();
 
-        // mockRepo.Setup(r => r.CreatePost(It.IsAny<Post>()).ReturnsAsync((Post post) =>
-        // {
-        //     postList.Add(post);
-        //     return post;
-        // });
-        mockRepo.Setup(r => r.CreatePost(It.IsAny<Domain.Post.Post>())).ReturnsAsync((Domain.Post.Post post) =>
+        
+        mockRepo.Setup(r => r.Add(It.IsAny<Domain.Post.Post>())).ReturnsAsync((Domain.Post.Post post) =>
 {
     post.Id = Guid.NewGuid(); 
     post.CreatedAt = DateTime.UtcNow;
     post.UpdatedAt = DateTime.UtcNow; 
     postList.Add(post); 
 
-    return post.Id;
+    return post;
 });
-  mockRepo.Setup(r => r.UpdatePost(It.IsAny<Domain.Post.Post>())).ReturnsAsync((Domain.Post.Post post) =>
-{
-    var existingPost= postList.FirstOrDefault(p => p.Id == post.Id);
-    Console.WriteLine(existingPost);
-    existingPost.UpdatedAt = DateTime.UtcNow; 
-    existingPost.Content = post.Content;
+ mockRepo.Setup(r => r.Update(It.IsAny<Domain.Post.Post>()))
+                .Callback((Domain.Post.Post post) =>
+                {
+                    var existingPost = postList.FirstOrDefault(c => c.Id == post.Id);
+                    if (existingPost != null)
+                    {
+                        existingPost.Content = post.Content;
+                        existingPost.UpdatedAt = DateTime.UtcNow;
+                    }
+                })
+                .Returns(Task.CompletedTask);
+mockRepo.Setup(r => r.Delete(It.IsAny<Domain.Post.Post>()))
+                .Callback((Domain.Post.Post post) =>
+                {
+                   var response = postList.FirstOrDefault(u => u.Id == post.Id);
 
-    return existingPost.Id;
-});
-
+            if (response != null)
+            {
+                postList.Remove(response);
+            }
+          
+                })
+                .Returns(Task.CompletedTask);
         mockRepo.Setup(r => r.GetAll()).ReturnsAsync(postList);
 
-        // mockRepo.Setup(r => r.RemoveLike(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync((Guid userId, Guid likesId) =>
-        // {
-        //     var response = likesList.FirstOrDefault(u => u.LikesId == likesId && u.UserId == userId);
-
-        //     if (response != null)
-        //     {
-        //         likesList.Remove(response);
-        //     }
-
-        //     return new Unit();
-        // });
-
-        mockRepo.Setup(r => r.GetPost(It.IsAny<Guid>())).ReturnsAsync((Guid postId) =>
+       
+        mockRepo.Setup(r => r.GetPost(It.IsAny<Guid>()))!.ReturnsAsync((Guid postId) =>
         {
             var response = postList.FirstOrDefault(u => u.Id == postId);
             return response;

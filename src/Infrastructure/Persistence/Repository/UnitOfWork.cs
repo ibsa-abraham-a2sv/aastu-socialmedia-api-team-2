@@ -1,5 +1,4 @@
 ﻿using Application.Contracts.Persistence;
-using Domain.Follows;
 
 namespace Persistence.Repository;
 
@@ -11,6 +10,7 @@ public class UnitOfWork : IUnitOfWork
     private FollowsRepository? _followsRepository;
     private LikesRepository? _likesRepository;
     private UnlikesRepository? _unlikesRepository;
+    private NotificationRepository? _notificationRepository;
 
 private PostRepository? _postRepository;
     private HashtagRepository? _hashtagRepository;
@@ -43,6 +43,9 @@ private PostRepository? _postRepository;
 
     public IUnlikesRepository UnlikesRepository =>
         _unlikesRepository ??= new UnlikesRepository(_dbContext);
+
+    public INotificationRepository NotificationRepository =>
+        _notificationRepository ??= new NotificationRepository(_dbContext);
 
     public IHashtagRepository HashtagRepository =>
         _hashtagRepository ??= new HashtagRepository(_dbContext);
