@@ -13,9 +13,11 @@ namespace Identity.Services;
 public class UserService : IUserService
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    public UserService(UserManager<ApplicationUser> userManager)
+    private readonly IAuthService _authService;
+    public UserService(UserManager<ApplicationUser> userManager, IAuthService authService)
     {
         _userManager = userManager;
+        _authService = authService;
     }
 
 
@@ -75,8 +77,15 @@ public class UserService : IUserService
         if (user == null)
             throw new NotFoundException("User", id);
         
+        //signout user
+        await _authService.SignOut();   
+        
         // delete the user
         var result = await  _userManager.DeleteAsync(user);
+        
+        
+        
+        
     }
 
     public async Task UploadProfilePicture(string userId, byte[] picture)
