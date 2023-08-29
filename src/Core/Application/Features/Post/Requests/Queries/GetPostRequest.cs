@@ -3,4 +3,4 @@ using MediatR;
 
 namespace Application.Features.Post.Requests.Queries;
 
-public record GetPostRequest(Guid postId) : IRequest<Domain.Post.Post>;
+public record GetPostRequest(Guid postId) : IRequest<PostDto>;

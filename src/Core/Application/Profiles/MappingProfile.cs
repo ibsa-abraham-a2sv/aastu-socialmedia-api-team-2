@@ -32,14 +32,8 @@ public class MappingProfile : Profile
         CreateMap<Follows, FollowsDto>().ReverseMap();
 
         CreateMap<Follows, FollowsReturnDto>().ReverseMap();
-         CreateMap<Post, PostDto>()
-                
-                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
-                .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
-                .ReverseMap(); 
-             CreateMap<Post, UpdatePostDto>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
-                .ReverseMap(); 
+         CreateMap<Post, PostDto>().ReverseMap();
+          CreateMap<Post, UpdatePostDto>().ReverseMap();
+           
     }
 }
