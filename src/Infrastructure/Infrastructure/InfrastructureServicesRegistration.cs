@@ -1,16 +1,18 @@
-﻿using Application.Contracts.Logging;
-using Infrastructure.Logging;
+﻿using Application.Contracts.Email;
+using Application.Models.Email;
+using Infrastructure.EmailService;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 
 namespace Infrastructure
 {
     public static class InfrastructureServicesRegistration
     {
-        public static IServiceCollection ConfigureInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+     public static IServiceCollection ConfigureInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
-
-            services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
+            services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
+            services.AddTransient<IEmailSender, EmailSender>();
             return services;
         }
     }

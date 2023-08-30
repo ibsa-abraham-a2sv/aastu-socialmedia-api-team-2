@@ -1,8 +1,12 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Net.Mail;
 using System.Security.Claims;
+using System.Security.Policy;
 using System.Text;
+using Application.Contracts.Email;
 using Application.Contracts.Identity;
 using Application.Exceptions;
+using Application.Models.Email;
 using Application.Models.Identity;
 using Identity.Models;
 using Microsoft.AspNetCore.Http;
@@ -17,14 +21,17 @@ namespace Identity.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly JwtSettings _jwtSettings;
+        private readonly IEmailSender _emailSender;
 
         public AuthService(UserManager<ApplicationUser> userManager,
             IOptions<JwtSettings> jwtSettings,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager,
+            IEmailSender emailSender)
         {
             _userManager = userManager;
             _jwtSettings = jwtSettings.Value;
             _signInManager = signInManager;
+            _emailSender = emailSender;
         }
 
         public async Task<AuthResponse> Login(AuthRequest request)
@@ -35,6 +42,11 @@ namespace Identity.Services
             if (user == null)
             {
                 throw new BadRequestException($"User with {request.Email} not found.");
+            }
+            
+            if (user.EmailConfirmed == false)
+            {
+                throw new BadRequestException($"Email {request.Email} is not confirmed.");
             }
 
             var result = await _signInManager.PasswordSignInAsync(user.UserName!, request.Password, false, lockoutOnFailure: false);
@@ -82,15 +94,26 @@ namespace Identity.Services
                 UserName = request.UserName,
                 BirthDate = request.BirthDate,
                 PasswordComfirmation = request.PasswordComfirmation,
-                EmailConfirmed = true
             };
             
+        
+            var mailMessage = new EmailMessage()
+            {
+                To = request.Email,
+                Subject = "Welcome to the Social Network",
+                Body = "Welcome to the Social Network",
+            };
+         
+            await _emailSender.SendEmail(mailMessage);
+            // return new RegistrationResponse();
             var result = await _userManager.CreateAsync(user, request.Password);
             
 
             if (result.Succeeded)
             {
-                return new RegistrationResponse() { UserId = user.Id };
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                
+                return new RegistrationResponse() { UserId = user.Id , Token = token};
             }
             else
             {
@@ -103,6 +126,75 @@ namespace Identity.Services
                 throw new BadRequestException($"{str}");
             }
             
+        }
+        
+        
+        public async Task<bool> VerifyEmail(string userId, string token)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new BadRequestException($"User with id '{userId}' not found.");
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (!result.Succeeded)
+            {
+                throw new BadRequestException($"Verification failed for user with id '{userId}'");
+            }
+
+            return true;
+        }
+
+        public async Task<ForgetPasswordResponse> ForgetPassword(string email)
+        {
+            // find user
+            var user = await _userManager.FindByEmailAsync(email);
+            // check if user is null
+            if (user == null)
+            {
+                throw new BadRequestException($"User with email '{email}' not found.");
+            }
+            
+            // check email comfirmed
+            if (user.EmailConfirmed == false)
+            {
+                throw new BadRequestException($"Email {email} is not confirmed.");
+            }
+            
+            // generate token
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            
+            return new ForgetPasswordResponse(){UserId = user.Id, Token = token};
+            
+        }
+
+        public async Task<bool> ResetPassword(ResetPasswordRequest request)
+        {
+            // get user
+            var user = await _userManager.FindByIdAsync(request.UserId);
+            
+            // check user exist
+            if (user == null)
+            {
+                throw new BadRequestException($"User with id '{request.UserId}' not found.");
+            }
+            
+            // reset password
+            var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
+            
+            // check result
+            if (!result.Succeeded)
+            {
+                throw new BadRequestException($"Reset password failed for user with id '{request.UserId}'");
+            }
+
+            return true;
+        }
+
+        public async Task SignOut()
+        {
+            await _signInManager.SignOutAsync();
         }
 
         private async Task<JwtSecurityToken> GenerateToken(ApplicationUser user)

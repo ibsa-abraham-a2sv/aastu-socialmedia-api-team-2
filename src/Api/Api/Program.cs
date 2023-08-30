@@ -2,10 +2,10 @@ using Api;
 using Api.Middleware;
 using Application;
 using Identity;
+using Infrastructure;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.OpenApi.Models;
 using Persistence;
-using Persistence.Repository;
 using Persistence.Service;
 
 
@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureApplicationServices();
 builder.Services.ConfigurePersistenceServices(builder.Configuration);
 builder.Services.ConfigureIdentityServices(builder.Configuration);
+builder.Services.ConfigureInfrastructureServices(builder.Configuration);
 builder.Services.AddSignalR();
 builder.Services.AddHttpContextAccessor();
 //add swagger documentation
