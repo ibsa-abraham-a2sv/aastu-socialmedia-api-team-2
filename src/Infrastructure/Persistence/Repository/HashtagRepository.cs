@@ -24,7 +24,7 @@ namespace Persistence.Repository
 
         public async Task<IReadOnlyList<Post>> GetPostsByHashtag(string tag, int pageIndex, int pageSize)
         {
-            return await _dbContext.Posts.Where(post => post.PostHashtags.Any(ph => ph.Hashtag.Tag.Equals(tag))).OrderByDescending(p => p.CreatedAt)
+            return await _dbContext.Posts.Where(post => post.PostHashtags.Any(ph => ph.Hashtag.Tag.Contains(tag))).OrderByDescending(p => p.CreatedAt)
             .Skip((pageIndex - 1) * pageSize)
             .Take(pageSize).ToListAsync();
         }
