@@ -14,6 +14,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.AspNetCore.SignalR;
+using Persistence.Service;
 
 namespace Api.Controllers;
 
@@ -25,12 +27,14 @@ public class PostController : ControllerBase
     private readonly IMediator _mediator;
     private readonly IHttpContextAccessor _contextAccessor;
     private readonly IUserService _userService;
+    private readonly IHubContext<NotificationHub> _notificationHubContext;
 
-    public PostController(IMediator mediator, IHttpContextAccessor contextAccessor, IUserService userService)
+    public PostController(IMediator mediator, IHttpContextAccessor contextAccessor, IUserService userService, IHubContext<NotificationHub> notificationHubContext)
     {
         _contextAccessor = contextAccessor;
         _mediator = mediator;
         _userService = userService;
+        _notificationHubContext = notificationHubContext;
     }
 
     [HttpGet("posts/{pageIndex}/{pageSize}")]
@@ -90,6 +94,7 @@ public async Task<ActionResult<BaseCommandResponse>> CreatePost(PostDto postDto)
 
                 var command = new CreateNotificationCommand { CreateNotificationDto = notificationDto };
                 var res = await _mediator.Send(command);
+                await _notificationHubContext.Clients.User(follower.UserId.ToString()).SendAsync("ReceiveNotification", $"{user.UserName} Posted recently");
             }
             return Ok(response);
     }

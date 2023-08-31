@@ -19,6 +19,7 @@ public class AuthController : ControllerBase
     public async Task<ActionResult<AuthResponse>> Login(AuthRequest request)
     {   
         return Ok(await _authenticationService.Login(request));
+        
     }
 
     [HttpPost("register")]
