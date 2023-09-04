@@ -80,7 +80,10 @@ public class FollowsController : ControllerBase
 
             var command = new CreateNotificationCommand { CreateNotificationDto = notificationDto };
             var res = await _mediator.Send(command);
-            await _notificationHubContext.Clients.User(Gid.ToString()).SendAsync("ReceiveNotification", $"{user.UserName} followed you recently");
+            
+            if(user.ConnectionId != null)
+                await _notificationHubContext.Clients.Client(user.ConnectionId).SendAsync("ReceiveNotification", notificationDto.Message);
+
 
         }
         return Ok(response);

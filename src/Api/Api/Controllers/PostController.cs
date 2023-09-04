@@ -94,7 +94,11 @@ public async Task<ActionResult<BaseCommandResponse>> CreatePost(PostDto postDto)
 
                 var command = new CreateNotificationCommand { CreateNotificationDto = notificationDto };
                 var res = await _mediator.Send(command);
-                await _notificationHubContext.Clients.User(follower.UserId.ToString()).SendAsync("ReceiveNotification", $"{user.UserName} Posted recently");
+                
+                // send notification to a user using it's connection id
+                var followingUser = await _userService.GetUserById(follower.UserId.ToString());
+                if(followingUser.ConnectionId != null)
+                    await _notificationHubContext.Clients.Client(followingUser.ConnectionId).SendAsync("ReceiveNotification", notificationDto.Message);
             }
             return Ok(response);
     }
