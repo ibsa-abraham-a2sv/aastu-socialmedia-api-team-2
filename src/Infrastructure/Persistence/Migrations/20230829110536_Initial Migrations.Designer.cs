@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Persistence;
@@ -11,9 +12,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(SocialSyncDbContext))]
-    partial class SocialSyncDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230829110536_Initial Migrations")]
+    partial class InitialMigrations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,7 +77,6 @@ namespace Persistence.Migrations
                     b.ToTable("Follows");
                 });
 
-
             modelBuilder.Entity("Domain.Hashtag.Hashtag", b =>
                 {
                     b.Property<Guid>("Id")
@@ -122,7 +124,6 @@ namespace Persistence.Migrations
 
                     b.ToTable("PostHashtag");
                 });
-
 
             modelBuilder.Entity("Domain.Likes.Likes", b =>
                 {
@@ -262,7 +263,6 @@ namespace Persistence.Migrations
 
                     b.Navigation("PostHashtags");
                 });
-                
 #pragma warning restore 612, 618
         }
     }

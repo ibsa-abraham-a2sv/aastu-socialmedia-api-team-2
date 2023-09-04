@@ -34,7 +34,7 @@ namespace Application.Features.Comments.Handlers.Commands
             
             var comment = await _unitOfWork.CommentRepository.Get(request.UpdateCommentDto.Id);
 
-            if(comment is null)
+            if (comment is null)
                 throw new NotFoundException(nameof(comment), request.UpdateCommentDto.Id);
             
             if (comment.UserId != request.RequestingUserId)

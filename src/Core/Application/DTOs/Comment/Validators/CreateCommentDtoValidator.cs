@@ -16,12 +16,12 @@ namespace Application.DTOs.Comment.Validators
             _unitOfWork = unitOfWork;
             Include(new ICommentDtoValidator());
 
-            // RuleFor(c => c.PostId)
-            // .MustAsync(async (id, token) => {
-            //     var postExists = await _unitOfWork.PostRepository.Exists(id);
-            //     return postExists;
-            // })
-            // .WithMessage("{ProperyName} does not exist.");
+            RuleFor(c => c.PostId)
+            .MustAsync(async (id, token) => {
+                var postExists = await _unitOfWork.PostRepository.Exists(id);
+                return postExists;
+            })
+            .WithMessage("{ProperyName} does not exist.");
         }
     }
 }

@@ -39,7 +39,7 @@ public class PostController : ControllerBase
     }
 
     [HttpGet("posts/{pageIndex}/{pageSize}")]
-    public async Task<ActionResult<List<Post>>> GetPosts(int pageIndex = 1, int pageSize = 10)
+    public async Task<ActionResult<List<PostDto>>> GetPosts(int pageIndex = 1, int pageSize = 10)
     {
          var id = _contextAccessor.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
         if (id == null) throw new UnauthorizedAccessException("user authentication needed");
@@ -51,7 +51,7 @@ public class PostController : ControllerBase
         return Ok(posts);
     }
 [HttpGet("posts/{postId}")]
-public async Task<ActionResult<Post>> GetPostById(Guid postId)
+public async Task<ActionResult<PostDto>> GetPostById(Guid postId)
 {
     var id = _contextAccessor.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
         
@@ -67,7 +67,7 @@ public async Task<ActionResult<Post>> GetPostById(Guid postId)
     return Ok(post);
 }
 [HttpGet("posts/user/{pageIndex}/{pageSize}")]
-public async Task<ActionResult<Post>> GetPostsByUserId(int pageIndex = 1, int pageSize = 10)
+public async Task<ActionResult<PostDto>> GetPostsByUserId(int pageIndex = 1, int pageSize = 10)
 {
    
     var id = _contextAccessor.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
@@ -158,7 +158,7 @@ public async Task<ActionResult<BaseCommandResponse>> DeletePost(Guid postId)
     return BadRequest(response);
 }
 [HttpGet("following/posts")]
-public async Task<ActionResult<Post>> GetFollowingPosts()
+public async Task<ActionResult<PostDto>> GetFollowingPosts()
 {
     var id = _contextAccessor.HttpContext!.User.FindFirstValue(CustomClaimTypes.Uid);
         if (id == null) throw new UnauthorizedAccessException("user authentication needed");

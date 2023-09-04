@@ -8,7 +8,7 @@ namespace Application.Contracts.Persistence
 {
     public interface ICommentRepository : IGenericRepository<Comment>
     {
-        Task<IReadOnlyList<Comment>> GetCommentsByPostId(Guid PostId, int pageIndex, int pageSize);
-        Task<IReadOnlyList<Comment>> GetCommentsByUserId(Guid UserId, int pageIndex, int pageSize);
+        Task<IReadOnlyList<Comment>> GetCommentsByPostId(Guid postId, int pageIndex, int pageSize);
+        Task<IReadOnlyList<Comment>> GetCommentsByUserId(Guid userId, int pageIndex, int pageSize);
     }
 }

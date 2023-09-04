@@ -9,6 +9,8 @@ namespace Persistence;
 
 
 using Microsoft.EntityFrameworkCore;
+using Domain.Hashtag;
+
 public class SocialSyncDbContext : AuditableDbContext
 {
     public SocialSyncDbContext(DbContextOptions<SocialSyncDbContext> option) : base(option){}
@@ -22,9 +24,10 @@ public class SocialSyncDbContext : AuditableDbContext
      public DbSet<Post> Posts { get; set; } = null!;
 
 
-    public DbSet<Comment> Comments { get; set; }
+    public DbSet<Comment> Comments { get; set; } = null!;
     public DbSet<Likes> Likes { get; set; } = null!;
     public DbSet<Unlikes> Unlikes { get; set; } = null!;
     public DbSet<Notification> Notifications { get; set; } = null!;
+    public DbSet<Hashtag> Hashtags { get; set; } = null!;
 
 }

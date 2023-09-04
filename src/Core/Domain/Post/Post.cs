@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using Domain.Common.Models;
+using Domain.Hashtag;
 
 namespace Domain.Post;
 
@@ -15,6 +16,6 @@ namespace Domain.Post;
 
         public ICollection<Domain.Comment.Comment> Comments { get; set; }
 
-
+        public ICollection<PostHashtag> PostHashtags { get; set; } = new List<PostHashtag>();
 
     }

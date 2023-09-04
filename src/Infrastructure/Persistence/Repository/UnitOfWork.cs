@@ -13,6 +13,7 @@ public class UnitOfWork : IUnitOfWork
     private NotificationRepository? _notificationRepository;
 
 private PostRepository? _postRepository;
+    private HashtagRepository? _hashtagRepository;
 
 
     public UnitOfWork(SocialSyncDbContext dbContext)
@@ -45,6 +46,9 @@ private PostRepository? _postRepository;
 
     public INotificationRepository NotificationRepository =>
         _notificationRepository ??= new NotificationRepository(_dbContext);
+
+    public IHashtagRepository HashtagRepository =>
+        _hashtagRepository ??= new HashtagRepository(_dbContext);
 
 
     public async Task SaveChangesAsync(CancellationToken cancellationToken = default)

@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Application.Features.Post.Handlers.Queries;
 
-public class GetFollowingPostsRequestHandler : IRequestHandler<GetFollowingPostsRequest, List<Domain.Post.Post>>
+public class GetFollowingPostsRequestHandler : IRequestHandler<GetFollowingPostsRequest, List<PostDto>>
 {
     private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -15,10 +15,10 @@ public class GetFollowingPostsRequestHandler : IRequestHandler<GetFollowingPosts
         _unitOfWork = unitOfWork;
          _mapper = mapper;
     }
-    public async Task <List<Domain.Post.Post>> Handle(GetFollowingPostsRequest request, CancellationToken cancellationToken)
+    public async Task <List<PostDto>> Handle(GetFollowingPostsRequest request, CancellationToken cancellationToken)
     {
         var response = await _unitOfWork.PostRepository.GetFollowingPosts(request.userId);
        
-      return response;
+      return _mapper.Map<List<PostDto>>(response);
     }
 }
