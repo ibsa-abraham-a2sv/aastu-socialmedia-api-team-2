@@ -11,6 +11,10 @@ using Application.Responses;
 using Domain.Post;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using Microsoft.AspNetCore.SignalR;
+using Persistence.Service;
+
 
 namespace Api.Controllers;
 
@@ -24,12 +28,14 @@ public class PostController : ControllerBase
      private readonly IHttpContextAccessor _contextAccessor;
 
     private readonly IUserService _userService;
+    private readonly IHubContext<NotificationHub> _notificationHubContext;
 
-    public PostController(IMediator mediator, IHttpContextAccessor contextAccessor, IUserService userService)
+    public PostController(IMediator mediator, IHttpContextAccessor contextAccessor, IUserService userService, IHubContext<NotificationHub> notificationHubContext)
     {
         _contextAccessor = contextAccessor;
         _mediator = mediator;
         _userService = userService;
+        _notificationHubContext = notificationHubContext;
     }
 
     [HttpGet("posts/{pageIndex}/{pageSize}")]
@@ -103,6 +109,11 @@ public async Task<ActionResult<BaseCommandResponse>> CreatePost(string content)
 
                 var command = new CreateNotificationCommand { CreateNotificationDto = notificationDto };
                 var res = await _mediator.Send(command);
+                
+                // send notification to a user using it's connection id
+                var followingUser = await _userService.GetUserById(follower.UserId.ToString());
+                if(followingUser.ConnectionId != null)
+                    await _notificationHubContext.Clients.Client(followingUser.ConnectionId).SendAsync("ReceiveNotification", notificationDto.Message);
             }
             return Ok(response);
     }

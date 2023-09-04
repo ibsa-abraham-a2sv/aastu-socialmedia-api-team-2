@@ -11,5 +11,6 @@ public class User
     public DateTime? BirthDate { get; set; }
     public byte[]? ProfilePicture { get; set; }
     public DateTime? DateCreated { get; set; }
+    public string ConnectionId { get; set; }
     
     }

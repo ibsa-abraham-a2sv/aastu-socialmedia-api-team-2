@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Persistence;
@@ -11,9 +12,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(SocialSyncDbContext))]
-    partial class SocialSyncDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230829044225_Entity Framework core")]
+    partial class EntityFrameworkcore
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,56 +76,6 @@ namespace Persistence.Migrations
 
                     b.ToTable("Follows");
                 });
-
-
-            modelBuilder.Entity("Domain.Hashtag.Hashtag", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Tag")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Hashtags");
-                });
-
-            modelBuilder.Entity("Domain.Hashtag.PostHashtag", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("HashtagId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("PostId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("HashtagId");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("PostHashtag");
-                });
-
 
             modelBuilder.Entity("Domain.Likes.Likes", b =>
                 {
@@ -224,45 +177,13 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.Comment.Comment", b =>
                 {
                     b.HasOne("Domain.Post.Post", "Post")
-                        .WithMany("Comments")
+                        .WithMany()
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Post");
                 });
-
-            modelBuilder.Entity("Domain.Hashtag.PostHashtag", b =>
-                {
-                    b.HasOne("Domain.Hashtag.Hashtag", "Hashtag")
-                        .WithMany("PostHashtags")
-                        .HasForeignKey("HashtagId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Post.Post", "Post")
-                        .WithMany("PostHashtags")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Hashtag");
-
-                    b.Navigation("Post");
-                });
-
-            modelBuilder.Entity("Domain.Hashtag.Hashtag", b =>
-                {
-                    b.Navigation("PostHashtags");
-                });
-
-            modelBuilder.Entity("Domain.Post.Post", b =>
-                {
-                    b.Navigation("Comments");
-
-                    b.Navigation("PostHashtags");
-                });
-                
 #pragma warning restore 612, 618
         }
     }
