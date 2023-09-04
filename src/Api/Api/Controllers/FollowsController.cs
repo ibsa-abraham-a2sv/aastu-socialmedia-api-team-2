@@ -67,6 +67,8 @@ public class FollowsController : ControllerBase
         var validateUserExists = await _userService.Exists(follows.FollowsId.ToString());
 
         if (!validateUserExists) throw new NotFoundException("user", follows.FollowsId);
+
+        if (new Guid(id) == follows.FollowsId) throw new BadRequestException("user cannot follow themselves");
         
         var response = await _mediator.Send(new CreateFollowingRequest(new Guid(id), follows.FollowsId));
 
