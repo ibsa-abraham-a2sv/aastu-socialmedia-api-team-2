@@ -10,11 +10,11 @@ using UnitTests.Mocks;
 
 namespace UnitTests.Post.Commands;
 
-public class CreatePostRequestHandlerTest
+public class DeletePostRequestHandlerTest
 {
     private readonly IMapper _mapper;
     private readonly Mock<IUnitOfWork> _mockRepo;
-    public CreatePostRequestHandlerTest()
+    public DeletePostRequestHandlerTest()
     {
         _mockRepo = MockUnitOfWork.GetUnitOfWork();
 
@@ -28,21 +28,18 @@ public class CreatePostRequestHandlerTest
     }
 
     [Fact]
-    public async Task CreatePostTest()
+    public async Task DeletePostTest()
     {
-        var handler = new CreatePostRequestHandler(_mockRepo.Object, _mapper);
+        var handler = new DeletePostRequestHandler(_mockRepo.Object);
      
         var userId = (await _mockRepo.Object.PostRepository.GetAll())[0].UserId;
-        PostDto post = new PostDto{
-            // Id = Guid.NewGuid(),
-            UserId = userId,
-            Content = "Test"
-        };
-    var result = await handler.Handle(new CreatePostRequest(post), CancellationToken.None);
+         var postId = (await _mockRepo.Object.PostRepository.GetAll())[0].Id;
+        
+    var result = await handler.Handle(new DeletePostRequest(userId, postId), CancellationToken.None);
     result.ShouldBeOfType<Application.Responses.BaseCommandResponse>();
     result.Success.ShouldBeTrue();
-    result.Message.ShouldBe("Successfully created");
-    result.Id.ShouldNotBeNull();
+    result.Message.ShouldBe("Successfully deleted the post");
+  
         
         
     }

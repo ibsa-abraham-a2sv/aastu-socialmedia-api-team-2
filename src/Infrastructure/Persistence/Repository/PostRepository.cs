@@ -17,7 +17,7 @@ public class PostRepository : GenericRepository<Post>, IPostRepository
     public async Task<Post> GetPost(Guid postId)
     {
         var results = await _dbContext.Posts.Where(post => post.Id == postId).FirstOrDefaultAsync();
-        return results;
+        return results!;
     }
 
     public async Task<List<Post>> GetPosts(int pageIndex = 1, int pageSize = 10)
@@ -29,22 +29,15 @@ public class PostRepository : GenericRepository<Post>, IPostRepository
         .ToListAsync(); ;
         return results;
     }
-    public async Task<Guid> CreatePost(Post post)
+    public async Task<Guid> Add(Post post)
     {
-        // var newPost = new Post
-        // {
-        //     UserId = postDto.UserId,
-        //     Content = postDto.Content,
-        //     CreatedAt = DateTime.UtcNow
-
-        // };
-
+    
         _dbContext.Posts.Add(post);
         await _dbContext.SaveChangesAsync();
         return post.Id;
     }
 
-    public async Task<Guid> UpdatePost(Post post)
+    public async Task Update(Post post)
     {
 
 
@@ -56,20 +49,20 @@ public class PostRepository : GenericRepository<Post>, IPostRepository
             _dbContext.Update(existingPost);
             await _dbContext.SaveChangesAsync();
         }
-         return existingPost.Id;
+         
     }
-    public async Task DeletePost(Guid userId, Guid postId)
-    {
+    // public async Task Delete(Guid userId, Guid postId)
+    // {
 
-        var existingPost = await _dbContext.Posts.FindAsync(postId);
-        Console.WriteLine(existingPost);
+    //     var existingPost = await _dbContext.Posts.FindAsync(postId);
+    //     Console.WriteLine(existingPost);
 
-        if (existingPost != null && existingPost.UserId == userId)
-        {
-            _dbContext.Posts.Remove(existingPost);
-            await _dbContext.SaveChangesAsync();
-        }
-    }
+    //     if (existingPost != null && existingPost.UserId == userId)
+    //     {
+    //         _dbContext.Posts.Remove(existingPost);
+    //         await _dbContext.SaveChangesAsync();
+    //     }
+    // }
 
     public async Task<List<Post>> GetPostsByUserId(Guid userId, int pageIndex = 1, int pageSize = 10)
     {

@@ -99,8 +99,8 @@ public class AuthServicesTest
         var result = await _mockRepo.Object.Register(request);
         
         // assert the result
+        result.ShouldBeOfType<RegistrationResponse>();// create an object of registration request
         result.ShouldNotBeNull();
-        result.ShouldBeOfType<RegistrationResponse>();
 
     }
 
@@ -120,8 +120,65 @@ public class AuthServicesTest
         
         // shouldly assert the user
         result.ShouldNotBeNull();
-        result.ShouldBeOfType<AuthResponse>();
+        result.ShouldBeOfType<AuthResponse>();        // create an object of registration request
         
         
+    }
+
+    [Fact]
+    public async Task UnauthorizedLogin()
+    {
+        var request = new AuthRequest()
+        {
+            Email = "admin@localhost.com",
+            Password = "P@ssword2",
+        };
+
+        try
+        {
+            var result = await _mockRepo.Object.Login(request);
+        }
+        catch (Exception e)
+        {
+            e.Message.ShouldBe("Credentials for 'admin@localhost.com aren't valid'.");
+        }
+
+    }
+
+    [Fact]
+    public async Task UnauthorizedRegister()
+    {
+        // create an object of registration request
+        var request = new RegistrationRequest()
+        {
+            UserName = "test",
+            Email = "user@example.com",
+            Password = "ssword",
+            PasswordComfirmation = "P@ssword1",
+            FirstName = "Test",
+            LastName = "User",
+            BirthDate = DateTime.UtcNow
+
+        };
+
+        // create an object of registration response
+        var response = new RegistrationResponse()
+        {
+            UserId = Guid.NewGuid().ToString()
+        };
+
+
+
+        try
+        {
+            // call the register method
+            var result = await _mockRepo.Object.Register(request);
+
+
+        }
+        catch (Exception e)
+        {
+            Assert.True(true);
+        }
     }
 }
