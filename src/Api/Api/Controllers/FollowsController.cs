@@ -12,7 +12,9 @@ using Application.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.IdentityModel.Tokens;
+using Persistence.Service;
 
 namespace Api.Controllers;
 
@@ -24,12 +26,14 @@ public class FollowsController : ControllerBase
     private readonly IMediator _mediator;
     private readonly IHttpContextAccessor _contextAccessor;
     private readonly IUserService _userService;
+    private readonly IHubContext<NotificationHub> _notificationHubContext;
 
-    public FollowsController(IMediator mediator, IHttpContextAccessor contextAccessor, IUserService userService)
+    public FollowsController(IMediator mediator, IHttpContextAccessor contextAccessor, IUserService userService, IHubContext<NotificationHub> notificationHubContext)
     {
         _contextAccessor = contextAccessor;
         _mediator = mediator;
         _userService = userService;
+        _notificationHubContext = notificationHubContext;
     }
 
     [HttpGet("followers")]
@@ -76,6 +80,10 @@ public class FollowsController : ControllerBase
 
             var command = new CreateNotificationCommand { CreateNotificationDto = notificationDto };
             var res = await _mediator.Send(command);
+            
+            if(user.ConnectionId != null)
+                await _notificationHubContext.Clients.Client(user.ConnectionId).SendAsync("ReceiveNotification", notificationDto.Message);
+
 
         }
         return Ok(response);

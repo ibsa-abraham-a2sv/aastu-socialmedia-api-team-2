@@ -11,5 +11,6 @@ namespace Identity.Models
         public byte[]? ProfilePicture { get; set; }
         public string? Bio { get; set; }
         public string? PasswordComfirmation { get; set; }
+        public string? ConnectionId { get; set; }
     }
 }

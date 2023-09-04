@@ -56,9 +56,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapPost("broadcast", async (string message, IHubContext<NotificationHub, INotificationClient> context) =>
+app.MapPost("broadcast", async (string message, IHubContext<NotificationHub> context) =>
 {
-    await context.Clients.All.ReceiveMessage(message);
+    // await context.Clients.All.ReceiveMessage(message);
+    await context.Clients.All.SendAsync("ReceiveMessage", message);
     return Results.NoContent();
 });
 

@@ -37,7 +37,8 @@ public class UserService : IUserService
                 Lastname = user.LastName!,
                 Bio = user.Bio,
                 BirthDate = user.BirthDate,
-                DateCreated = user.DateCreated
+                DateCreated = user.DateCreated,
+                ConnectionId = user.ConnectionId!
             };
         throw new NotFoundException("User", userId);
     }
